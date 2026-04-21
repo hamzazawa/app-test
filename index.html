@@ -3,491 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>EPEC STORE - شحن وبيع حسابات eFootball</title>
-    <meta name="description" content="متجر EPEC STORE الأفضل لبيع وشحن حسابات eFootball وخدمات الألعاب. حسابات أسطورية بأسعار مناسبة (دفع بنكي أو تعبئة إنوي).">
-    <meta name="keywords" content="eFootball, بيس, حسابات بيس, epec store, شحن ألعاب, متجر ألعاب">
-    <meta name="author" content="DOOMN STORE">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <meta name="description" content="متجر EPEC STORE الأفضل لبيع وشحن حسابات eFootball.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #0f172a; 
-            color: #f8fafc;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
-        }
-        /* إخفاء شريط التمرير للجمالية */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .price-bar button { transition: all 0.2s ease-in-out; }
+        .price-bar button.active { background-color: #2563eb; color: white; }
     </style>
 </head>
-<body class="antialiased selection:bg-blue-500 selection:text-white">
+<body class="antialiased">
 
-    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40 shadow-lg">
-        <div class="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid fa-gamepad text-blue-500 text-3xl"></i>
-                <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-l from-blue-400 to-indigo-500">
-                    EPEC STORE
-                </h1>
+    <header class="bg-[#1e293b] border-b border-slate-800 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-gamepad text-blue-500 text-2xl"></i>
+                <h1 class="text-xl font-black text-white tracking-wider">EPEC STORE</h1>
             </div>
             
-            <div class="flex items-center gap-2 bg-red-900/30 text-red-400 px-4 py-2 rounded-full text-sm font-bold border border-red-500/30">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                 </span>
-                <span id="activeUsers">34</span> شخص يتصفح المتجر الآن
+                <span class="text-xs font-bold text-slate-300"><span id="activeCount">16</span> نشط</span>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8">
         
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">أفضل حسابات <span class="text-blue-500">eFootball</span></h2>
-            <p class="text-gray-400 max-w-xl mx-auto mb-8">اختر الحساب الذي يناسبك، ادفع بالطريقة التي تريحك (بنك أو إنوي)، واستلم حسابك فوراً.</p>
-            
-            <div class="flex flex-wrap justify-center gap-3">
-                <button class="px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">الكل</button>
-                <button class="px-6 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold text-sm border border-gray-700 transition">أقل من 100 درهم</button>
-                <button class="px-6 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold text-sm border border-gray-700 transition">100 - 300 درهم</button>
-                <button class="px-6 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold text-sm border border-gray-700 transition">+300 درهم</button>
+        <div class="flex justify-center mb-8">
+            <div class="price-bar flex bg-slate-800 rounded-xl overflow-hidden border border-slate-700 w-full max-w-2xl shadow-lg">
+                <button class="flex-1 py-3 text-sm font-bold active border-l border-slate-700">الكل</button>
+                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700 border-l border-slate-700">أقل من 100</button>
+                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700 border-l border-slate-700">100 - 300</button>
+                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700">+300 درهم</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFzZwLQWIAAcoRU?format=jpg&name=900x900" alt="حساب 1" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط بثمن ناقص و عامر فيه شي 250 لاعب</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">80 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">100 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط بثمن ناقص و عامر فيه شي 250 لاعب', 'https://pbs.twimg.com/media/HFzZwLQWIAAcoRU?format=jpg&name=900x900', '80', '100')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="accountsGrid">
             </div>
 
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HEruJ93bIAAxSMQ?format=jpg&name=900x900" alt="حساب 2" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط ديال تقصار 100% فيه اقود نسخة ديال مبابي و ريبيري جديد و و كونط متكامل</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">190 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">240 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط ديال تقصار 100% فيه اقود نسخة ديال مبابي', 'https://pbs.twimg.com/media/HEruJ93bIAAxSMQ?format=jpg&name=900x900', '190', '240')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HE01OH5bsAAZWHn?format=jpg&name=900x900" alt="حساب 3" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط عامر فيه احسن رأس حربة + أحسن بليتز دفاع ✅ الوسط ✅ الهجوم ✅</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">420 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">500 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط عامر فيه احسن رأس حربة', 'https://pbs.twimg.com/media/HE01OH5bsAAZWHn?format=jpg&name=900x900', '420', '500')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFpUs1jXwAAg8Mx?format=jpg&name=900x900" alt="حساب 4" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">القناص باتيستوتا و مولر و ديونغ و المدرب و زيد و زيد</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">150 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">180 درهم</span>
-                        </div>
-                        <button onclick="openModal('القناص باتيستوتا و مولر و ديونغ', 'https://pbs.twimg.com/media/HFpUs1jXwAAg8Mx?format=jpg&name=900x900', '150', '180')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HF3Hjp1WYAACIc4?format=jpg&name=900x900" alt="حساب 5" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">فيه 2 بليتز فيا و لمين يامال و الوسط مقود و حتا دفاع</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">250 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">290 درهم</span>
-                        </div>
-                        <button onclick="openModal('فيه 2 بليتز فيا و لمين يامال', 'https://pbs.twimg.com/media/HF3Hjp1WYAACIc4?format=jpg&name=900x900', '250', '290')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFuux_KbYAAjykQ?format=jpg&name=900x900" alt="حساب 6" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط عامر مدربين فيه صون من أحسن بليتزلات و زلاتان 110🤯 و عاد التكامل</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">250 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">310 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط عامر مدربين فيه صون وزلاتان 110', 'https://pbs.twimg.com/media/HFuux_KbYAAjykQ?format=jpg&name=900x900', '250', '310')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://files.catbox.moe/3ur4bb.jpg" alt="حساب 7" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">صحاب بيرلو ها هو</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">120 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">130 درهم</span>
-                        </div>
-                        <button onclick="openModal('صحاب بيرلو ها هو', 'https://files.catbox.moe/3ur4bb.jpg', '120', '130')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFzj3JCXwAASP2D?format=jpg&name=900x900" alt="حساب 8" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">هاد تكامل كامل ب ثمن مزيان</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">130 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">160 درهم</span>
-                        </div>
-                        <button onclick="openModal('هاد تكامل كامل ب ثمن مزيان', 'https://pbs.twimg.com/media/HFzj3JCXwAASP2D?format=jpg&name=900x900', '130', '160')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HF0B-tMWUAEEtgL?format=jpg&name=900x900" alt="حساب 9" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط فيه باجيو و فيتينيا و ثمن مزيان</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">85 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">105 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط فيه باجيو و فيتينيا و ثمن مزيان', 'https://pbs.twimg.com/media/HF0B-tMWUAEEtgL?format=jpg&name=900x900', '85', '105')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HEn1i8DXoAAkiwv?format=jpg&name=900x900" alt="حساب 10" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">عندك بليتز إستيفاو و عندك أقود مهاجم ف اللعبة و كمل</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">150 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">190 درهم</span>
-                        </div>
-                        <button onclick="openModal('عندك بليتز إستيفاو و عندك أقود مهاجم', 'https://pbs.twimg.com/media/HEn1i8DXoAAkiwv?format=jpg&name=900x900', '150', '190')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HC66_OaX0AA3r8F?format=jpg&name=900x900" alt="حساب 11" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كاين بليتز و كاين الدفاع و الهجوم و الثمن مزيان</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">220 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">300 درهم</span>
-                        </div>
-                        <button onclick="openModal('كاين بليتز و كاين الدفاع و الهجوم', 'https://pbs.twimg.com/media/HC66_OaX0AA3r8F?format=jpg&name=900x900', '220', '300')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFzby-kXwAAnH3r?format=jpg&name=900x900" alt="حساب 12" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">كونط فيه نيمار بليتز الحارس و شوية دفاع ثمن طايح</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">50 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">60 درهم</span>
-                        </div>
-                        <button onclick="openModal('كونط فيه نيمار بليتز الحارس', 'https://pbs.twimg.com/media/HFzby-kXwAAnH3r?format=jpg&name=900x900', '50', '60')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HE0nzv4XYAEINCw?format=jpg&name=900x900" alt="حساب 13" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">صحاب كولر ها هو بثمن مزيان</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">360 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">410 درهم</span>
-                        </div>
-                        <button onclick="openModal('صحاب كولر ها هو بثمن مزيان', 'https://pbs.twimg.com/media/HE0nzv4XYAEINCw?format=jpg&name=900x900', '360', '410')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 transition duration-300 card-hover flex flex-col">
-                <img src="https://pbs.twimg.com/media/HFzPmKKbsAASfpU?format=jpg&name=900x900" alt="حساب 14" class="w-full h-48 object-cover border-b border-gray-700">
-                <div class="p-5 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-lg mb-4 text-gray-100 leading-tight">بدا من المدرب و نتا غادي و كونط عامر لعابة</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-2">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-building-columns text-blue-400 ml-1"></i> بنك:</span>
-                            <span class="font-bold text-blue-400">150 درهم</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded-lg mb-4">
-                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-mobile-screen-button text-purple-400 ml-1"></i> إنوي:</span>
-                            <span class="font-bold text-purple-400">180 درهم</span>
-                        </div>
-                        <button onclick="openModal('بدا من المدرب و نتا غادي', 'https://pbs.twimg.com/media/HFzPmKKbsAASfpU?format=jpg&name=900x900', '150', '180')" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            شراء الآن <i class="fa-solid fa-cart-shopping mr-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </main>
 
-    <footer class="bg-gray-900 border-t border-gray-800 mt-12 py-8 text-center text-gray-400 text-sm">
-        <p>جميع الحقوق محفوظة &copy; 2026</p>
-        <p class="mt-2 text-gray-500">تم التطوير بواسطة <span class="font-bold text-blue-500">DOOMN STORE</span></p>
-    </footer>
-
-    <div id="buyModal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div id="modalContent" class="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
-            
-            <div class="flex justify-between items-center p-4 border-b border-gray-800">
-                <h3 class="font-bold text-lg text-white">إتمام الطلب</h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-white bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="p-4">
-                <div class="relative rounded-xl overflow-hidden mb-4 border border-gray-700">
-                    <img id="modalImg" src="" alt="Account Image" class="w-full h-40 object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-                    <p id="modalTitle" class="absolute bottom-2 left-2 right-2 font-bold text-sm text-white drop-shadow-md text-right"></p>
-                </div>
-
-                <p class="text-gray-400 text-sm mb-3 font-bold">اختر طريقة الدفع المناسبة لك:</p>
-
-                <div class="space-y-3">
-                    
-                    <label class="flex items-center justify-between p-3 border border-gray-700 rounded-xl cursor-pointer hover:bg-gray-800 transition">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="payment_method" value="تحويل بنكي" class="w-5 h-5 accent-blue-500" checked>
-                            <div class="flex flex-col">
-                                <span class="font-bold text-gray-200">تحويل بنكي (CIH, التجاري...)</span>
-                                <span class="text-xs text-gray-400">التسليم بعد التحقق</span>
-                            </div>
-                        </div>
-                        <span id="modalBank" class="font-black text-blue-400"></span>
-                    </label>
-
-                    <label class="flex items-center justify-between p-3 border border-gray-700 rounded-xl cursor-pointer hover:bg-gray-800 transition">
-                        <div class="flex items-center gap-3">
-                            <input type="radio" name="payment_method" value="تعبئة إنوي" class="w-5 h-5 accent-purple-500">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-gray-200">تعبئة إنوي (*9)</span>
-                                <span class="text-xs text-gray-400">سهل وسريع</span>
-                            </div>
-                        </div>
-                        <span id="modalInwi" class="font-black text-purple-400"></span>
-                    </label>
-
-                    <label class="flex items-center justify-between p-3 border border-green-500/50 bg-green-900/20 rounded-xl cursor-pointer hover:bg-green-900/40 transition relative overflow-hidden">
-                        <div class="absolute top-0 right-0 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">تخفيض -15 درهم</div>
-                        <div class="flex items-center gap-3 mt-1">
-                            <input type="radio" name="payment_method" value="تسليم فوري VIP" class="w-5 h-5 accent-green-500">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-green-400"><i class="fa-solid fa-bolt text-yellow-400 mr-1"></i> تسليم فوري (VIP)</span>
-                                <span class="text-xs text-gray-300">تستلم الحساب في نفس اللحظة</span>
-                            </div>
-                        </div>
-                        <span id="modalVip" class="font-black text-green-400 mt-1"></span>
-                    </label>
-
-                </div>
-
-                <button onclick="confirmOrder()" class="mt-5 w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-green-500/30 flex items-center justify-center gap-2 text-lg">
-                    <i class="fa-brands fa-whatsapp text-2xl"></i> تأكيد وإرسال الطلب
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // المتغيرات لحفظ بيانات الحساب المختار
-        let currentTitle = "";
-        let currentPrice = "";
+        // داتا الحسابات (نفس التي أرسلتها لي)
+        const accountsData = {
+            "7UaDhCdeyj": { bank_price: "80", inwi_price: "100", img: "https://pbs.twimg.com/media/HFzZwLQWIAAcoRU?format=jpg&name=900x900", title: "كونط بثمن ناقص و عامر فيه شي 250 لاعب" },
+            "NDE4rFUoKd": { bank_price: "190", inwi_price: "240", img: "https://pbs.twimg.com/media/HEruJ93bIAAxSMQ?format=jpg&name=900x900", title: "كونط ديال تقصار 100% فيه اقود نسخة ديال مبابي و ريبيري جديد" },
+            "S5Ordx0ZtW": { bank_price: "420", inwi_price: "500", img: "https://pbs.twimg.com/media/HE01OH5bsAAZWHn?format=jpg&name=900x900", title: "كونط عامر فيه احسن رأس حربة + أحسن بليتز دفاع" },
+            "YcmoBn1QF9": { bank_price: "150", inwi_price: "180", img: "https://pbs.twimg.com/media/HFpUs1jXwAAg8Mx?format=jpg&name=900x900", title: "القناص باتيستوتا و مولر و ديونغ و المدرب" },
+            "YpK4Qcy70M": { bank_price: "250", inwi_price: "290", img: "https://pbs.twimg.com/media/HF3Hjp1WYAACIc4?format=jpg&name=900x900", title: "فيه 2 بليتز فيا و لمين يامال و الوسط مقود" },
+            "a3qpJjKkcY": { bank_price: "250", inwi_price: "310", img: "https://pbs.twimg.com/media/HFuux_KbYAAjykQ?format=jpg&name=900x900", title: "كونط عامر مدربين فيه صون من أحسن بليتزلات" },
+            "acc15": { bank_price: "120", inwi_price: "130", img: "https://files.catbox.moe/3ur4bb.jpg", title: "صحاب بيرلو ها هو" }
+            // يمكنك إضافة الباقي بنفس النمط
+        };
 
-        // دالة فتح النافذة
-        function openModal(title, img, bankPrice, inwiPrice) {
-            currentTitle = title;
+        const grid = document.getElementById('accountsGrid');
+        
+        for (const [id, acc] of Object.entries(accountsData)) {
+            // تجهيز الرابط لصفحة الدفع الجديدة مع إرسال البيانات
+            const checkoutUrl = `checkout.html?id=${id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${acc.bank_price}&inwi=${acc.inwi_price}`;
             
-            // تعبئة البيانات في النافذة
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalImg').src = img;
-            document.getElementById('modalBank').innerText = bankPrice + " درهم";
-            document.getElementById('modalInwi').innerText = inwiPrice + " درهم";
-            
-            // حساب ثمن التخفيض الفوري (ننقص 15 درهم من الثمن البنكي)
-            let vipPrice = parseInt(bankPrice) - 15;
-            if(vipPrice < 0) vipPrice = bankPrice; // حماية إذا كان الثمن صغير جداً
-            document.getElementById('modalVip').innerText = vipPrice + " درهم";
-
-            // إظهار النافذة بحركة أنيقة
-            const modal = document.getElementById('buyModal');
-            const content = document.getElementById('modalContent');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            // تأخير بسيط لتشغيل الأنيميشن
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-            }, 10);
+            grid.innerHTML += `
+            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500 transition duration-300 flex flex-col">
+                <img src="${acc.img}" class="w-full h-48 object-cover border-b border-slate-700">
+                <div class="p-4 flex-grow flex flex-col justify-between">
+                    <h3 class="font-bold text-sm mb-4 text-slate-200">${acc.title}</h3>
+                    <div>
+                        <div class="flex justify-between items-center bg-slate-900/50 p-2.5 rounded-lg mb-2">
+                            <span class="text-slate-400 text-xs">البنك / كاش بليس:</span>
+                            <span class="font-bold text-blue-400 text-sm">${acc.bank_price} MAD</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-900/50 p-2.5 rounded-lg mb-4">
+                            <span class="text-slate-400 text-xs">تعبئة إنوي:</span>
+                            <span class="font-bold text-purple-400 text-sm">${acc.inwi_price} MAD</span>
+                        </div>
+                        <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-lg transition text-sm shadow-lg shadow-blue-500/20">
+                            شراء الحساب
+                        </a>
+                    </div>
+                </div>
+            </div>`;
         }
 
-        // دالة إغلاق النافذة
-        function closeModal() {
-            const modal = document.getElementById('buyModal');
-            const content = document.getElementById('modalContent');
-            
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        // دالة إرسال الطلب للواتساب
-        function confirmOrder() {
-            // معرفة أي طريقة دفع اختار الزبون
-            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
-            
-            // تجهيز الرسالة
-            const message = `سلام عليكم EPEC STORE،\nبغيت نشري هاد الحساب:\n*${currentTitle}*\n\nطريقة الدفع لي ختاريت: *${selectedMethod}*`;
-            
-            // تحويل الزبون للواتساب
-            const waUrl = `https://wa.me/212663011890?text=${encodeURIComponent(message)}`;
-            window.open(waUrl, '_blank');
-            
-            // إغلاق النافذة بعد التحويل
-            closeModal();
-        }
-
-        // عداد الزوار الوهمي التفاعلي
+        // عداد عشوائي للنشطين
         setInterval(() => {
-            // توليد رقم عشوائي بين 15 و 60
-            const randomUsers = Math.floor(Math.random() * (60 - 15 + 1)) + 15;
-            document.getElementById('activeUsers').innerText = randomUsers;
-        }, 5000); // يتحدث كل 5 ثواني
+            document.getElementById('activeCount').innerText = Math.floor(Math.random() * (45 - 12 + 1)) + 12;
+        }, 6000);
     </script>
 </body>
 </html>
