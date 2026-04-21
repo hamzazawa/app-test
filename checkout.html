@@ -117,53 +117,68 @@
             </label>
         </div>
 
-        <button onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition flex justify-center items-center gap-2 text-sm shadow-md">
-            تأكيد الطلب عبر الواتساب <i class="fa-brands fa-whatsapp text-lg"></i>
+        <button id="submitBtn" onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition flex justify-center items-center gap-2 text-sm shadow-md">
+            متابعة الدفع <i class="fa-solid fa-arrow-left text-lg"></i>
         </button>
 
     </main>
 
     <script>
+        // جلب البيانات من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         const accImg = urlParams.get('img');
         const bankPrice = urlParams.get('bank');
         const inwiPrice = urlParams.get('inwi');
 
+        // التحقق من وجود بيانات، وإلا إظهار رسالة خطأ
         if(accTitle) {
             document.getElementById('accTitle').innerText = accTitle;
             document.getElementById('accImg').src = accImg;
             updatePrices(false); // السعر الافتراضي
         } else {
-            window.location.href = 'index.html';
+            document.getElementById('accTitle').innerText = "حدث خطأ: المرجو العودة واختيار حساب!";
+            document.getElementById('accImg').src = "https://via.placeholder.com/150?text=Error";
         }
 
-        // تحديث السعر حسب طريقة الدفع
+        // تحديث السعر بناءً على طريقة الدفع
         function updatePrices(isInwi) {
+            if(!bankPrice || !inwiPrice) return;
             const currentPrice = isInwi ? inwiPrice : bankPrice;
             document.getElementById('priceDisplay').innerText = currentPrice + " MAD";
         }
 
-        // إرسال الطلب
-        // إرسال الطلب والانتقال للصفحة المخصصة
-function processOrder() {
-    const method = document.querySelector('input[name="payment_method"]:checked').value;
-    const isInwi = method.includes("إنوي");
-    const finalPrice = isInwi ? inwiPrice : bankPrice;
-    
-    const btn = document.querySelector('button[onclick="processOrder()"]');
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحويل...';
-    btn.classList.replace('bg-blue-600', 'bg-slate-700');
-    
-    setTimeout(() => {
-        // إذا اختار تحويل بنكي أو كاش بليس يذهب لصفحة التأكيد
-        if(method.includes("تحويل بنكي") || method.includes("كاش بليس")) {
-            window.location.href = `confirm.html?price=${finalPrice}&method=${encodeURIComponent(method)}`;
-        } else {
-            // إذا اختار إنوي أو غيره، يذهب للواتساب مباشرة كالسابق
-            const msg = `سلام، بغيت نأكد الطلب ديالي:\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPrice} درهم\nواش متوفر باش ندفع دابا؟`;
-            window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
+        // معالجة الطلب وتوجيه الزبون
+        function processOrder() {
+            if(!accTitle) {
+                alert("المرجو العودة للصفحة الرئيسية واختيار حساب أولاً.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const methodElement = document.querySelector('input[name="payment_method"]:checked');
+            if(!methodElement) return;
+            
+            const method = methodElement.value;
+            const isInwi = method.includes("إنوي");
+            const finalPrice = isInwi ? inwiPrice : bankPrice;
+            
+            // تغيير شكل الزر
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحويل...';
+            btn.classList.replace('bg-blue-600', 'bg-slate-700');
+            
+            setTimeout(() => {
+                // إذا اختار تحويل بنكي أو كاش بليس يذهب لصفحة تأكيد الدفع
+                if(method.includes("تحويل بنكي") || method.includes("كاش بليس")) {
+                    window.location.href = `confirm.html?price=${finalPrice}&method=${encodeURIComponent(method)}`;
+                } else {
+                    // إذا اختار شيء آخر (مثل إنوي أو بيبال) يذهب للواتساب
+                    const msg = `سلام، بغيت نأكد الطلب ديالي:\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPrice} درهم\n\nواش متوفر باش ندفع دابا؟`;
+                    window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
+                }
+            }, 800);
         }
-    }, 800);
-}
-        
+    </script>
+</body>
+</html>
