@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الدفع - EPEC STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <div class="absolute top-0 left-0 w-full h-96 bg-blue-600/10 blur-[100px] -z-10 rounded-full"></div>
+
+    <header class="bg-[#1e293b]/80 backdrop-blur-md border-b border-slate-800 py-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 max-w-lg flex items-center justify-between">
+            <h1 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-blue-500 text-lg"></i> بوابة الدفع الآمنة
+            </h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6 max-w-lg flex-grow flex flex-col justify-center">
+        
+        <div id="step1-banks" class="glass-panel rounded-2xl p-5 mb-6 shadow-2xl transition-all duration-500">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-black text-white mb-2">معلومات التحويل البنكي</h2>
+                <p class="text-xs text-slate-400">المرجو إرسال المبلغ <span id="amountDisplay" class="font-bold text-blue-400"></span> إلى أحد الحسابات التالية:</p>
+            </div>
+
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-4 mb-4 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-1 bg-blue-500 h-full"></div>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-slate-200">CIH Bank</h3>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/CIH_Bank_logo.svg/1200px-CIH_Bank_logo.svg.png" class="h-4 object-contain opacity-80" alt="CIH">
+                </div>
+                <p class="text-xs text-slate-400 mb-3">الاسم: HAMZA EL KIRI</p>
+                <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2.5 border border-slate-700/50">
+                    <code id="cihRib" class="text-sm font-mono text-blue-300 tracking-widest dir-ltr">230 000 00000000000000 00</code>
+                    <button onclick="copyText('cihRib', this)" class="text-slate-400 hover:text-white transition px-2">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-4 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-1 bg-yellow-500 h-full"></div>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-slate-200">Attijariwafa Bank</h3>
+                </div>
+                <p class="text-xs text-slate-400 mb-3">الاسم: HAMZA EL KIRI</p>
+                <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2.5 border border-slate-700/50">
+                    <code id="awbRib" class="text-sm font-mono text-yellow-300 tracking-widest dir-ltr">048 000 00000000000000 00</code>
+                    <button onclick="copyText('awbRib', this)" class="text-slate-400 hover:text-white transition px-2">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="showProofForm()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-check-double"></i> لقد أرسلت المال
+            </button>
+        </div>
+
+        <div id="step2-proof" class="glass-panel rounded-2xl p-5 mb-6 shadow-2xl hidden opacity-0 transition-opacity duration-500 scale-95 transform">
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-3">إثبات الدفع 🧾</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">البريد الإلكتروني (لتلقي معلومات الحساب)</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute right-3 top-3.5 text-slate-500"></i>
+                        <input type="email" id="userEmail" placeholder="example@gmail.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition dir-ltr text-right">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">رقم الواتساب (للتواصل السريع)</label>
+                    <div class="relative">
+                        <i class="fa-brands fa-whatsapp absolute right-3 top-3.5 text-slate-500"></i>
+                        <input type="tel" id="userPhone" placeholder="06XXXXXXXX" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition dir-ltr text-right">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">صورة التوصيل أو رقم العملية (Reçu)</label>
+                    <textarea id="proofText" rows="2" placeholder="اكتب رقم العملية هنا، أو أرفق صورة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition resize-none"></textarea>
+                    
+                    <div class="mt-2 relative overflow-hidden">
+                        <input type="file" id="proofImg" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="bg-slate-800 border border-dashed border-slate-600 rounded-xl py-3 text-center text-xs text-slate-400 flex items-center justify-center gap-2 hover:bg-slate-700 transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-lg"></i> إرفاق صورة التوصيل (اختياري)
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="submitProof()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال
+                </button>
+            </div>
+        </div>
+
+        <div id="step3-processing" class="glass-panel rounded-2xl p-8 text-center shadow-2xl hidden opacity-0 transition-opacity duration-500">
+            
+            <div class="relative w-24 h-24 mx-auto mb-6">
+                <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+                <div class="loader absolute inset-0 border-4 border-transparent rounded-full"></div>
+                <i class="fa-solid fa-gears absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl text-blue-500"></i>
+            </div>
+
+            <h2 class="text-xl font-black text-white mb-2">قيد المعالجة...</h2>
+            <div class="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold mb-6">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                </span>
+                جاري التحقق من الدفعة
+            </div>
+
+            <p class="text-sm text-slate-400 mb-2">الوقت المقدر لتسليم الحساب:</p>
+            <div class="text-4xl font-mono font-black text-white mb-8 tracking-widest drop-shadow-md" id="countdown">05:00</div>
+
+            <button id="speedUpBtn" onclick="speedUpProcess()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-20 transition duration-300"></div>
+                <i class="fa-solid fa-rocket text-purple-400"></i> تسريع العملية (VIP)
+            </button>
+            <p id="speedMsg" class="text-green-400 text-xs mt-3 font-bold hidden opacity-0 transition-opacity"><i class="fa-solid fa-check"></i> تم إعطاء الأولوية لطلبك بنجاح!</p>
+
+        </div>
+
+    </main>
+
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 pointer-events-none">
+        <i class="fa-solid fa-check text-green-400 mr-1"></i> تم النسخ بنجاح
+    </div>
+
+    <script>
+        // جلب الثمن من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        const price = urlParams.get('price') || '0';
+        document.getElementById('amountDisplay').innerText = price + ' MAD';
+
+        // دالة نسخ الـ RIB
+        function copyText(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.querySelector('i');
+                icon.className = 'fa-solid fa-check text-green-400';
+                
+                const toast = document.getElementById('toast');
+                toast.classList.remove('opacity-0');
+                
+                setTimeout(() => {
+                    icon.className = 'fa-regular fa-copy text-slate-400';
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            });
+        }
+
+        // الانتقال لمرحلة إثبات الدفع
+        function showProofForm() {
+            document.getElementById('step1-banks').classList.add('hidden');
+            const step2 = document.getElementById('step2-proof');
+            step2.classList.remove('hidden');
+            
+            setTimeout(() => {
+                step2.classList.remove('opacity-0', 'scale-95');
+            }, 50);
+        }
+
+        // إرسال الإثبات والانتقال لصفحة المعالجة
+        function submitProof() {
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+            
+            if(!email || !phone) {
+                alert('المرجو إدخال البريد الإلكتروني ورقم الواتساب للتواصل معك!');
+                return;
+            }
+
+            document.getElementById('step2-proof').classList.add('hidden');
+            const step3 = document.getElementById('step3-processing');
+            step3.classList.remove('hidden');
+            
+            setTimeout(() => {
+                step3.classList.remove('opacity-0');
+                startCountdown();
+            }, 50);
+
+            // هنا يمكنك برمجياً إرسال البيانات (Email, Phone, Proof) إلى Firebase Database
+        }
+
+        // نظام العداد الزمني (Countdown)
+        let timeLeft = 300; // 5 دقائق بالثواني
+        let timerInterval;
+
+        function startCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            
+            timerInterval = setInterval(() => {
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    countdownEl.innerText = "00:00";
+                    countdownEl.classList.add('text-green-400');
+                    return;
+                }
+                
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                
+                countdownEl.innerText = `${minutes}:${seconds}`;
+                timeLeft--;
+            }, 1000);
+        }
+
+        // ميزة تسريع العملية (وهمية تعطي شعوراً بالتفاعل)
+        function speedUpProcess() {
+            const btn = document.getElementById('speedUpBtn');
+            const msg = document.getElementById('speedMsg');
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-slate-400"></i> جاري التفعيل...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.classList.add('hidden');
+                msg.classList.remove('hidden');
+                setTimeout(() => msg.classList.remove('opacity-0'), 50);
+                
+                // تسريع العداد الوهمي (نقص دقيقتين فجأة)
+                if(timeLeft > 120) timeLeft -= 120;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
