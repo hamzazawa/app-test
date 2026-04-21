@@ -145,20 +145,25 @@
         }
 
         // إرسال الطلب
-        function processOrder() {
-            const method = document.querySelector('input[name="payment_method"]:checked').value;
-            const isInwi = method.includes("إنوي");
-            const finalPrice = isInwi ? inwiPrice : bankPrice;
-            
-            const btn = document.querySelector('button[onclick="processOrder()"]');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحويل...';
-            btn.classList.replace('bg-blue-600', 'bg-slate-700');
-            
-            setTimeout(() => {
-                const msg = `سلام، بغيت نأكد الطلب ديالي:\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPrice} درهم\n\nواش متوفر باش ندفع دابا؟`;
-                window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
-            }, 800);
+        // إرسال الطلب والانتقال للصفحة المخصصة
+function processOrder() {
+    const method = document.querySelector('input[name="payment_method"]:checked').value;
+    const isInwi = method.includes("إنوي");
+    const finalPrice = isInwi ? inwiPrice : bankPrice;
+    
+    const btn = document.querySelector('button[onclick="processOrder()"]');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحويل...';
+    btn.classList.replace('bg-blue-600', 'bg-slate-700');
+    
+    setTimeout(() => {
+        // إذا اختار تحويل بنكي أو كاش بليس يذهب لصفحة التأكيد
+        if(method.includes("تحويل بنكي") || method.includes("كاش بليس")) {
+            window.location.href = `confirm.html?price=${finalPrice}&method=${encodeURIComponent(method)}`;
+        } else {
+            // إذا اختار إنوي أو غيره، يذهب للواتساب مباشرة كالسابق
+            const msg = `سلام، بغيت نأكد الطلب ديالي:\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPrice} درهم\nواش متوفر باش ندفع دابا؟`;
+            window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
         }
-    </script>
-</body>
-</html>
+    }, 800);
+}
+        
