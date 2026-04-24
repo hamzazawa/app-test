@@ -5,239 +5,333 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد الدفع - EPEC STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        
+        .copy-btn:active { transform: scale(0.90); }
     </style>
 </head>
-<body class="antialiased flex flex-col min-h-screen relative overflow-x-hidden">
+<body class="antialiased flex flex-col min-h-screen relative pb-20">
 
-    <div class="absolute top-0 left-0 w-full h-96 bg-blue-600/10 blur-[100px] -z-10 rounded-full"></div>
-
-    <header class="bg-[#1e293b]/80 backdrop-blur-md border-b border-slate-800 py-4 sticky top-0 z-50">
-        <div class="container mx-auto px-4 max-w-lg flex items-center justify-between">
-            <h1 class="text-sm font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-blue-500 text-lg"></i> بوابة الدفع الآمنة
+    <header class="bg-[#1e293b] border-b border-slate-800 py-4 sticky top-0 z-40 shadow-md">
+        <div class="container mx-auto px-4 max-w-md flex items-center justify-between">
+            <h1 class="text-sm font-black text-white flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-blue-400 text-lg"></i> إتمام التحويل
             </h1>
+            <a href="javascript:history.back()" class="text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <i class="fa-solid fa-arrow-right"></i> رجوع
+            </a>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6 max-w-lg flex-grow flex flex-col justify-center">
+    <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
         
-        <div id="step1-banks" class="glass-panel rounded-2xl p-5 mb-6 shadow-2xl transition-all duration-500">
-            <div class="text-center mb-6">
-                <h2 class="text-xl font-black text-white mb-2">معلومات التحويل البنكي</h2>
-                <p class="text-xs text-slate-400">المرجو إرسال المبلغ <span id="amountDisplay" class="font-bold text-blue-400"></span> إلى أحد الحسابات التالية:</p>
-            </div>
-
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-4 mb-4 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-1 bg-blue-500 h-full"></div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-slate-200">CIH Bank</h3>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/CIH_Bank_logo.svg/1200px-CIH_Bank_logo.svg.png" class="h-4 object-contain opacity-80" alt="CIH">
-                </div>
-                <p class="text-xs text-slate-400 mb-3">الاسم: HAMZA EL KIRI</p>
-                <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2.5 border border-slate-700/50">
-                    <code id="cihRib" class="text-sm font-mono text-blue-300 tracking-widest dir-ltr">230 000 00000000000000 00</code>
-                    <button onclick="copyText('cihRib', this)" class="text-slate-400 hover:text-white transition px-2">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-4 mb-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-1 bg-yellow-500 h-full"></div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-slate-200">Attijariwafa Bank</h3>
-                </div>
-                <p class="text-xs text-slate-400 mb-3">الاسم: HAMZA EL KIRI</p>
-                <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2.5 border border-slate-700/50">
-                    <code id="awbRib" class="text-sm font-mono text-yellow-300 tracking-widest dir-ltr">048 000 00000000000000 00</code>
-                    <button onclick="copyText('awbRib', this)" class="text-slate-400 hover:text-white transition px-2">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
-
-            <button onclick="showProofForm()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-check-double"></i> لقد أرسلت المال
-            </button>
+        <div class="bg-blue-600/10 border border-blue-500/30 rounded-2xl p-5 mb-6 text-center shadow-lg">
+            <p class="text-xs text-blue-300 font-bold mb-1">المبلغ المطلوب تحويله:</p>
+            <h2 id="amountDisplay" class="text-3xl font-black text-white tracking-wider">0</h2>
+            <p id="methodDisplay" class="text-[11px] text-slate-400 mt-2 bg-slate-900/50 inline-block px-3 py-1 rounded-full border border-slate-700/50">طريقة الدفع: جاري التحميل...</p>
         </div>
 
-        <div id="step2-proof" class="glass-panel rounded-2xl p-5 mb-6 shadow-2xl hidden opacity-0 transition-opacity duration-500 scale-95 transform">
-            <h2 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-3">إثبات الدفع 🧾</h2>
+        <div class="mb-8">
+            <h3 class="text-sm font-black text-slate-200 mb-4 px-1"><i class="fa-solid fa-building-columns text-slate-400 mr-1"></i> معلومات الدفع</h3>
+            
+            <div id="banks-container" class="space-y-3 hidden">
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f47b20]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" alt="CIH" class="h-6 object-contain rounded bg-white px-1 py-0.5">
+                        <span class="text-xs font-bold text-slate-400">HAMZA ELKIRI</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">5324182211032800</code>
+                        <button onclick="copyText('5324182211032800', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f7b000]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" alt="Attijari" class="h-6 object-contain rounded bg-white px-1 py-0.5">
+                        <span class="text-xs font-bold text-slate-400">HAMZA ELKIRI</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-[11px] font-bold text-slate-200 tracking-wider dir-ltr">007726000433930040247727</code>
+                        <button onclick="copyText('007726000433930040247727', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition shrink-0 ml-2">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#005e8a]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" alt="Barid" class="h-6 object-contain rounded bg-white px-1 py-0.5">
+                        <span class="text-xs font-bold text-slate-400">HAMZA ELKIRI</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">12650414</code>
+                        <button onclick="copyText('12650414', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#2dbd93]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" alt="Pocket" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-slate-400">HAMZA ELKIRI</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">2111191420920000</code>
+                        <button onclick="copyText('2111191420920000', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="binance-container" class="space-y-3 hidden">
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f3ba2f]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdt1XwAAwZ8I?format=png&name=small" alt="Binance" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-slate-400">Binance Pay ID</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-lg font-black text-yellow-500 tracking-widest dir-ltr">772023327</code>
+                        <button onclick="copyText('772023327', this)" class="copy-btn bg-slate-700 hover:bg-yellow-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-2 text-center">المرجو إرسال المبلغ بالـ USDT عبر Binance Pay</p>
+                </div>
+            </div>
+
+            <div id="cashplus-container" class="space-y-3 hidden">
+                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#ffd700]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded bg-white px-1 py-0.5">
+                        <span class="text-xs font-bold text-slate-400">HAMZA ELKIRI</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
+                        <code class="text-lg font-black text-slate-200 tracking-widest dir-ltr">0708011007</code>
+                        <button onclick="copyText('0708011007', this)" class="copy-btn bg-slate-700 hover:bg-yellow-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 mb-8">
+            <h3 class="text-sm font-black text-slate-200 mb-5"><i class="fa-solid fa-list-check text-green-400 mr-1"></i> كيف تستلم حسابك؟</h3>
+            
+            <div class="space-y-5 relative before:absolute before:inset-0 before:ml-3.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-600 before:to-transparent pr-4">
+                
+                <div class="relative flex items-center gap-4">
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold shadow-lg shadow-blue-500/30 ring-4 ring-slate-800">1</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white mb-0.5">إرسال المال</h4>
+                        <p class="text-[10px] text-slate-400">قم بتحويل المبلغ لأحد الحسابات المذكورة أعلاه.</p>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center gap-4">
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-white text-[10px] font-bold ring-4 ring-slate-800">2</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white mb-0.5">إثبات الدفع</h4>
+                        <p class="text-[10px] text-slate-400">أدخل معلوماتك واضغط على تأكيد الطلب بالأسفل.</p>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center gap-4">
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-white text-[10px] font-bold ring-4 ring-slate-800">3</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white mb-0.5">رقم الواتساب</h4>
+                        <p class="text-[10px] text-slate-400">تأكد من كتابة رقمك بشكل صحيح لاستلام الحساب فيه.</p>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center gap-4">
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-white text-[10px] font-bold shadow-lg shadow-green-500/30 ring-4 ring-slate-800"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                        <h4 class="text-xs font-bold text-green-400 mb-0.5">استلام الحساب</h4>
+                        <p class="text-[10px] text-slate-400">سنرسل لك معلومات الحساب في أقل من 10 دقائق.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="proof-section" class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-xl scroll-mt-24">
+            <h3 class="text-sm font-black text-slate-200 mb-4 border-b border-slate-700 pb-3">إثبات الدفع وتأكيد الطلب</h3>
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">البريد الإلكتروني (لتلقي معلومات الحساب)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-envelope absolute right-3 top-3.5 text-slate-500"></i>
-                        <input type="email" id="userEmail" placeholder="example@gmail.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition dir-ltr text-right">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">رقم الواتساب (للتواصل السريع)</label>
+                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">الاسم الكامل ورقم الواتساب <span class="text-red-400">*</span></label>
                     <div class="relative">
                         <i class="fa-brands fa-whatsapp absolute right-3 top-3.5 text-slate-500"></i>
-                        <input type="tel" id="userPhone" placeholder="06XXXXXXXX" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition dir-ltr text-right">
+                        <input type="text" id="userInfo" placeholder="مثال: حمزة الكيري - 0612345678" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition placeholder-slate-600">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 mb-1.5 ml-1">صورة التوصيل أو رقم العملية (Reçu)</label>
-                    <textarea id="proofText" rows="2" placeholder="اكتب رقم العملية هنا، أو أرفق صورة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition resize-none"></textarea>
+                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">دليل التحويل (رقم العملية أو الملاحظة) <span class="text-red-400">*</span></label>
+                    <textarea id="proofText" rows="2" placeholder="اكتب رقم التحويل، أو اسم المرسل..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition resize-none placeholder-slate-600"></textarea>
                     
-                    <div class="mt-2 relative overflow-hidden">
-                        <input type="file" id="proofImg" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <div class="bg-slate-800 border border-dashed border-slate-600 rounded-xl py-3 text-center text-xs text-slate-400 flex items-center justify-center gap-2 hover:bg-slate-700 transition">
-                            <i class="fa-solid fa-cloud-arrow-up text-lg"></i> إرفاق صورة التوصيل (اختياري)
-                        </div>
+                    <div class="mt-2 p-3 bg-blue-900/10 border border-blue-500/20 rounded-xl flex items-center gap-3">
+                        <i class="fa-solid fa-image text-blue-400 text-lg"></i>
+                        <p class="text-[10px] text-slate-300 leading-relaxed">
+                            لتسريع العملية، سيتم توجيهك للواتساب لإرسال <span class="font-bold text-blue-400">صورة التوصيل (Screenshot)</span> بعد الضغط على تأكيد.
+                        </p>
                     </div>
                 </div>
 
-                <button onclick="submitProof()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 mt-4">
-                    <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال
+                <button onclick="triggerConfirmModal()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-xl transition shadow-[0_4px_15px_rgba(34,197,94,0.3)] flex justify-center items-center gap-2 text-sm mt-2">
+                    <i class="fa-solid fa-paper-plane"></i> تأكيد الطلب
                 </button>
             </div>
         </div>
 
-        <div id="step3-processing" class="glass-panel rounded-2xl p-8 text-center shadow-2xl hidden opacity-0 transition-opacity duration-500">
-            
-            <div class="relative w-24 h-24 mx-auto mb-6">
-                <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
-                <div class="loader absolute inset-0 border-4 border-transparent rounded-full"></div>
-                <i class="fa-solid fa-gears absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl text-blue-500"></i>
-            </div>
-
-            <h2 class="text-xl font-black text-white mb-2">قيد المعالجة...</h2>
-            <div class="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold mb-6">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
-                </span>
-                جاري التحقق من الدفعة
-            </div>
-
-            <p class="text-sm text-slate-400 mb-2">الوقت المقدر لتسليم الحساب:</p>
-            <div class="text-4xl font-mono font-black text-white mb-8 tracking-widest drop-shadow-md" id="countdown">05:00</div>
-
-            <button id="speedUpBtn" onclick="speedUpProcess()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-20 transition duration-300"></div>
-                <i class="fa-solid fa-rocket text-purple-400"></i> تسريع العملية (VIP)
-            </button>
-            <p id="speedMsg" class="text-green-400 text-xs mt-3 font-bold hidden opacity-0 transition-opacity"><i class="fa-solid fa-check"></i> تم إعطاء الأولوية لطلبك بنجاح!</p>
-
-        </div>
-
     </main>
 
-    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 pointer-events-none">
-        <i class="fa-solid fa-check text-green-400 mr-1"></i> تم النسخ بنجاح
+    <a href="https://wa.me/212663011890?text=سلام،%20محتاج%20مساعدة%20في%20الدفع" target="_blank" class="fixed bottom-5 left-5 bg-slate-800 border border-slate-700 hover:border-blue-500 text-white w-12 h-12 rounded-full flex justify-center items-center shadow-2xl transition z-40 group">
+        <i class="fa-solid fa-headset text-xl text-blue-400 group-hover:scale-110 transition-transform"></i>
+    </a>
+
+    <div id="toastNotif" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 z-[100] pointer-events-none flex items-center">
+        <i class="fa-solid fa-check text-green-400 mr-1"></i> <span id="toastMsg">تم النسخ بنجاح</span>
+    </div>
+
+    <div id="validationModal" class="fixed inset-0 bg-black/80 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div id="modalContent" class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 p-6 text-center">
+            <div class="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-500/20">
+                <i class="fa-brands fa-whatsapp text-3xl text-yellow-500"></i>
+            </div>
+            <h3 class="text-lg font-black text-white mb-2">تأكيد رقم الواتساب</h3>
+            <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+                هل أنت متأكد أن المعلومات التي أدخلتها صحيحة؟<br>
+                <span id="confirmInfoDisplay" class="font-bold text-blue-400 block mt-2 p-2 bg-slate-900 rounded-lg"></span><br>
+                سنقوم بإرسال معلومات الحساب إلى هذا الرقم.
+            </p>
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 py-3 rounded-xl font-bold text-sm bg-slate-700 text-white hover:bg-slate-600 transition">تعديل الرقم</button>
+                <button onclick="submitFinalOrder()" class="flex-1 py-3 rounded-xl font-bold text-sm bg-green-600 text-white hover:bg-green-500 transition shadow-lg shadow-green-500/30">نعم، متأكد</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // جلب الثمن من الرابط
+        // 1. جلب السعر والطريقة من الرابط
         const urlParams = new URLSearchParams(window.location.search);
-        const price = urlParams.get('price') || '0';
-        document.getElementById('amountDisplay').innerText = price + ' MAD';
+        const price = urlParams.get('price');
+        const method = urlParams.get('method');
 
-        // دالة نسخ الـ RIB
-        function copyText(elementId, btn) {
-            const text = document.getElementById(elementId).innerText;
+        // 2. التحقق وعرض البيانات الديناميكية
+        if(!price || !method) {
+            alert("حدث خطأ في الجلسة، سيتم إرجاعك للصفحة الرئيسية.");
+            window.location.href = 'index.html';
+        } else {
+            // عرض الثمن والرمز المناسب
+            const symbol = method.includes("Binance") ? "$" : " MAD";
+            document.getElementById('amountDisplay').innerText = price + symbol;
+            document.getElementById('methodDisplay').innerText = `طريقة الدفع: ${method}`;
+
+            // إظهار الحاوية المناسبة للمعلومات البنكية
+            if (method.includes("Binance")) {
+                document.getElementById('binance-container').classList.remove('hidden');
+            } else if (method.includes("كاش بليس")) {
+                document.getElementById('cashplus-container').classList.remove('hidden');
+            } else {
+                // الافتراضي هو البنوك المحلية
+                document.getElementById('banks-container').classList.remove('hidden');
+            }
+        }
+
+        // 3. دالة النسخ
+        function copyText(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
-                const icon = btn.querySelector('i');
+                // تغيير الأيقونة مؤقتاً
+                const icon = btnElement.querySelector('i');
+                const originalClass = icon.className;
                 icon.className = 'fa-solid fa-check text-green-400';
                 
-                const toast = document.getElementById('toast');
+                // إظهار الإشعار
+                const toast = document.getElementById('toastNotif');
                 toast.classList.remove('opacity-0');
                 
                 setTimeout(() => {
-                    icon.className = 'fa-regular fa-copy text-slate-400';
+                    icon.className = originalClass;
                     toast.classList.add('opacity-0');
                 }, 2000);
             });
         }
 
-        // الانتقال لمرحلة إثبات الدفع
-        function showProofForm() {
-            document.getElementById('step1-banks').classList.add('hidden');
-            const step2 = document.getElementById('step2-proof');
-            step2.classList.remove('hidden');
-            
-            setTimeout(() => {
-                step2.classList.remove('opacity-0', 'scale-95');
-            }, 50);
-        }
+        // 4. فتح نافذة التحقق (Modal)
+        function triggerConfirmModal() {
+            const userInfo = document.getElementById('userInfo').value.trim();
+            const proofText = document.getElementById('proofText').value.trim();
 
-        // إرسال الإثبات والانتقال لصفحة المعالجة
-        function submitProof() {
-            const email = document.getElementById('userEmail').value;
-            const phone = document.getElementById('userPhone').value;
-            
-            if(!email || !phone) {
-                alert('المرجو إدخال البريد الإلكتروني ورقم الواتساب للتواصل معك!');
+            if(userInfo === "" || proofText === "") {
+                alert("المرجو ملء جميع الخانات (الاسم، الواتساب، وإثبات الدفع) قبل المتابعة.");
                 return;
             }
 
-            document.getElementById('step2-proof').classList.add('hidden');
-            const step3 = document.getElementById('step3-processing');
-            step3.classList.remove('hidden');
+            // وضع المعلومات في النافذة ليراجعها
+            document.getElementById('confirmInfoDisplay').innerText = userInfo;
+
+            // إظهار النافذة
+            const modal = document.getElementById('validationModal');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             
             setTimeout(() => {
-                step3.classList.remove('opacity-0');
-                startCountdown();
-            }, 50);
-
-            // هنا يمكنك برمجياً إرسال البيانات (Email, Phone, Proof) إلى Firebase Database
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
         }
 
-        // نظام العداد الزمني (Countdown)
-        let timeLeft = 300; // 5 دقائق بالثواني
-        let timerInterval;
-
-        function startCountdown() {
-            const countdownEl = document.getElementById('countdown');
+        // 5. إغلاق النافذة
+        function closeModal() {
+            const modal = document.getElementById('validationModal');
+            const content = document.getElementById('modalContent');
             
-            timerInterval = setInterval(() => {
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    countdownEl.innerText = "00:00";
-                    countdownEl.classList.add('text-green-400');
-                    return;
-                }
-                
-                let minutes = Math.floor(timeLeft / 60);
-                let seconds = timeLeft % 60;
-                
-                minutes = minutes < 10 ? '0' + minutes : minutes;
-                seconds = seconds < 10 ? '0' + seconds : seconds;
-                
-                countdownEl.innerText = `${minutes}:${seconds}`;
-                timeLeft--;
-            }, 1000);
-        }
-
-        // ميزة تسريع العملية (وهمية تعطي شعوراً بالتفاعل)
-        function speedUpProcess() {
-            const btn = document.getElementById('speedUpBtn');
-            const msg = document.getElementById('speedMsg');
-            
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-slate-400"></i> جاري التفعيل...';
-            btn.disabled = true;
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
             
             setTimeout(() => {
-                btn.classList.add('hidden');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.remove('opacity-0'), 50);
-                
-                // تسريع العداد الوهمي (نقص دقيقتين فجأة)
-                if(timeLeft > 120) timeLeft -= 120;
-            }, 1500);
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // 6. الإرسال النهائي للواتساب
+        function submitFinalOrder() {
+            const userInfo = document.getElementById('userInfo').value.trim();
+            const proofText = document.getElementById('proofText').value.trim();
+            const symbol = method.includes("Binance") ? "$" : " درهم";
+
+            // تجهيز رسالة الواتساب النهائية
+            const waMessage = `*تأكيد دفع جديد 🟢*\n\n` +
+                              `👤 *المشتري:* ${userInfo}\n` +
+                              `💳 *طريقة الدفع:* ${method}\n` +
+                              `💰 *المبلغ:* ${price}${symbol}\n` +
+                              `🧾 *الإثبات/الملاحظة:* ${proofText}\n\n` +
+                              `_مرفق مع هذه الرسالة صورة التوصيل:_`;
+
+            // توجيه للواتساب
+            window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(waMessage)}`;
         }
     </script>
 </body>
