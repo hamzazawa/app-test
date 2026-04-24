@@ -30,12 +30,12 @@
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
-    <header class="bg-[#1e293b] border-b border-slate-800 py-4 sticky top-0 z-50">
+    <header class="bg-[#1e293b] border-b border-slate-800 py-4 sticky top-0 z-50 shadow-md">
         <div class="container mx-auto px-4 max-w-md flex items-center justify-between">
             <h1 class="text-sm font-black text-white flex items-center gap-2">
                 <i class="fa-solid fa-lock text-green-400"></i> إتمام الشراء الآمن
             </h1>
-            <a href="index.html" class="text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1">
+            <a href="index.html" class="text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                 <i class="fa-solid fa-arrow-right"></i> إلغاء
             </a>
         </div>
@@ -43,25 +43,41 @@
 
     <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
         
+        <button onclick="alert('سيتم إضافة الفيديو قريباً!')" class="w-full mb-5 bg-gradient-to-r from-slate-800 to-slate-800 border border-slate-700 hover:border-blue-500/50 rounded-xl p-3 flex items-center justify-between transition group shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition shadow-inner">
+                    <i class="fa-solid fa-play ml-0.5 text-xs"></i>
+                </div>
+                <span class="text-sm font-bold text-slate-200">فيديو تعليمي: كيف تشتري من موقعنا؟</span>
+            </div>
+            <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
+        </button>
+
+        <div class="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-6 shadow-sm">
+            <div class="bg-emerald-500/20 w-10 h-10 rounded-full flex items-center justify-center text-emerald-400 shrink-0">
+                <i class="fa-solid fa-stopwatch text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-emerald-400 mb-0.5">التسليم في 10 دقائق كحد أقصى</p>
+                <p class="text-[10px] text-slate-400">مع دعم فني كامل أثناء وبعد عملية الشراء</p>
+            </div>
+        </div>
+
         <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden mb-8 shadow-lg">
-            <div class="relative h-40 w-full bg-slate-900">
-                <img id="accImg" src="" alt="Account Image" class="w-full h-full object-cover opacity-90">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+            <div class="relative h-48 w-full bg-slate-900 border-b border-slate-700">
+                <img id="accImg" src="" alt="Account Image" class="w-full h-full object-cover">
             </div>
             
-            <div class="p-4 -mt-6 relative z-10">
-                <div class="flex gap-2 mb-3">
-                    <span class="bg-blue-900/80 border border-blue-500/50 text-blue-300 text-[10px] font-black px-2 py-1 rounded flex items-center gap-1 shadow-md backdrop-blur-sm">
-                        <i class="fa-solid fa-link"></i> KONAMI ID
-                    </span>
-                    <span class="bg-red-900/80 border border-red-500/50 text-red-300 text-[10px] font-black px-2 py-1 rounded flex items-center gap-1 shadow-md backdrop-blur-sm">
-                        <i class="fa-brands fa-google-play"></i> GOOGLE PLAY: NO
+            <div class="p-4">
+                <div class="mb-3">
+                    <span class="inline-flex items-center gap-1.5 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-[10px] font-black px-2.5 py-1.5 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-link text-xs"></i> مربوط بـ KONAMI ID
                     </span>
                 </div>
 
                 <h2 id="accTitle" class="text-sm font-bold text-white leading-relaxed mb-4">جاري التحميل...</h2>
                 
-                <div class="flex items-center justify-between bg-slate-900/50 rounded-xl p-3 border border-slate-700/50">
+                <div class="flex items-center justify-between bg-slate-900 rounded-xl p-3 border border-slate-700/50">
                     <div class="text-center w-1/2 border-l border-slate-700">
                         <p class="text-[10px] text-slate-400 mb-0.5">سعر البنك</p>
                         <p id="baseBankPrice" class="font-bold text-sm text-slate-200">0 MAD</p>
@@ -76,22 +92,21 @@
 
         <div class="flex items-center justify-between mb-4 px-1">
             <h3 class="text-sm font-black text-slate-200">اختر طريقة الدفع</h3>
-            <span class="text-[10px] text-green-400 font-bold bg-green-900/20 px-2 py-1 rounded border border-green-500/20">تخفيضات حصرية</span>
         </div>
         
         <div class="space-y-3 mb-8">
             
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="تحويل بنكي" class="hidden" checked>
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-300 group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-slate-300 group-hover:text-white transition shadow-inner">
                             <i class="fa-solid fa-building-columns text-lg"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">تحويل بنكي</span>
-                                <span class="bg-red-500/20 text-red-400 text-[10px] font-black px-1.5 py-0.5 rounded border border-red-500/20">-15%</span>
+                                <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-15%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">CIH, Barid, Attijari, Pocket, CashPlus Virement</div>
                         </div>
@@ -107,15 +122,15 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="PayPal" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-[#00457C] group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-[#00457C] group-hover:text-white transition shadow-inner">
                             <i class="fa-brands fa-paypal text-xl"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">PayPal</span>
-                                <span class="bg-red-500/20 text-red-400 text-[10px] font-black px-1.5 py-0.5 rounded border border-red-500/20">-10%</span>
+                                <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-10%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">دفع إلكتروني آمن وسريع</div>
                         </div>
@@ -131,15 +146,15 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="Binance Pay" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-[#F3BA2F] group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-[#F3BA2F] group-hover:text-white transition shadow-inner">
                             <i class="fa-brands fa-bitcoin text-xl"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">Binance Pay</span>
-                                <span class="bg-red-500/20 text-red-400 text-[10px] font-black px-1.5 py-0.5 rounded border border-red-500/20">-10%</span>
+                                <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-10%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">USDT / Crypto</div>
                         </div>
@@ -155,15 +170,15 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="وكالة كاش بليس" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-yellow-500 group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-yellow-500 group-hover:text-white transition shadow-inner">
                             <i class="fa-solid fa-money-bill-transfer text-lg"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">وكالة Cash Plus</span>
-                                <span class="bg-red-500/20 text-red-400 text-[10px] font-black px-1.5 py-0.5 rounded border border-red-500/20">-7%</span>
+                                <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-7%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">الإرسال نقداً من أي وكالة</div>
                         </div>
@@ -179,15 +194,15 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="تعبئة إنوي" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-purple-400 group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-purple-400 group-hover:text-white transition shadow-inner">
                             <i class="fa-solid fa-mobile-screen-button text-lg"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">تعبئة إنوي (*9)</span>
-                                <span class="bg-red-500/20 text-red-400 text-[10px] font-black px-1.5 py-0.5 rounded border border-red-500/20">-5%</span>
+                                <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-5%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">الدفع عبر رموز التعبئة</div>
                         </div>
@@ -203,17 +218,17 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="مباشرة عبر الواتساب" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/40 rounded-xl p-3.5 transition flex items-center justify-between group">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/50 flex items-center justify-center text-green-500 group-hover:text-white transition">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-green-400 group-hover:text-white transition shadow-inner">
                             <i class="fa-brands fa-whatsapp text-xl"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold text-white">تواصل عبر الواتساب</span>
-                                <span class="bg-slate-700 text-slate-300 text-[10px] font-bold px-1.5 py-0.5 rounded">0%</span>
+                                <span class="text-sm font-bold text-white">الشراء عبر واتساب</span>
+                                <span class="bg-slate-700 text-slate-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-600">0%</span>
                             </div>
-                            <div class="text-[9px] text-slate-400 mt-1">شراء تقليدي بدون تخفيض</div>
+                            <div class="text-[9px] text-slate-400 mt-1">تواصل مباشر لتأكيد الطلب</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
@@ -227,8 +242,8 @@
 
         </div>
 
-        <div class="sticky bottom-4 z-50">
-            <button id="submitBtn" onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl transition shadow-[0_0_20px_rgba(59,130,246,0.4)] flex justify-center items-center gap-2 text-sm tracking-wide">
+        <div class="sticky bottom-4 z-50 mt-4">
+            <button id="submitBtn" onclick="processOrder()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl transition shadow-[0_4px_15px_rgba(59,130,246,0.3)] flex justify-center items-center gap-2 text-sm tracking-wide">
                 <span>تأكيد ومتابعة الدفع</span>
                 <i class="fa-solid fa-arrow-left mt-0.5"></i>
             </button>
@@ -237,43 +252,38 @@
     </main>
 
     <script>
-        // 1. جلب البيانات من الرابط
+        // جلب البيانات من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         const accImg = urlParams.get('img');
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
 
-        // 2. التحقق وعرض البيانات الأساسية
+        // التحقق وتعبئة الواجهة
         if(accTitle) {
             document.getElementById('accTitle').innerText = accTitle;
             document.getElementById('accImg').src = accImg;
             document.getElementById('baseBankPrice').innerText = originalBankPrice + " MAD";
             document.getElementById('baseInwiPrice').innerText = originalInwiPrice + " MAD";
             
-            // حساب التخفيضات وعرضها فوراً
             calculateDiscounts();
         } else {
             alert("حدث خطأ! المرجو العودة للمتجر واختيار الحساب من جديد.");
             window.location.href = 'index.html';
         }
 
-        // 3. نظام حساب التخفيضات
+        // الحسابات الرياضية للتخفيضات
         function calculateDiscounts() {
-            // البنك كأساس للبيبال وبينانس وكاش بليس والبنك
             const pBank = originalBankPrice;
-            // التعبئة كأساس للإنوي
             const pInwi = originalInwiPrice;
 
-            // الحسابات الرياضية (Math.round لإزالة الفواصل)
-            const priceBank = Math.round(pBank - (pBank * 0.15));      // -15%
-            const pricePayPal = Math.round(pBank - (pBank * 0.10));    // -10%
-            const priceBinance = Math.round(pBank - (pBank * 0.10));   // -10%
-            const priceCashPlus = Math.round(pBank - (pBank * 0.07));  // -7%
-            const priceInwiDiscount = Math.round(pInwi - (pInwi * 0.05)); // -5%
-            const priceWhatsapp = pBank;                               // 0%
+            const priceBank = Math.round(pBank - (pBank * 0.15));      
+            const pricePayPal = Math.round(pBank - (pBank * 0.10));    
+            const priceBinance = Math.round(pBank - (pBank * 0.10));   
+            const priceCashPlus = Math.round(pBank - (pBank * 0.07));  
+            const priceInwiDiscount = Math.round(pInwi - (pInwi * 0.05)); 
+            const priceWhatsapp = pBank;                               
 
-            // تعبئة الأرقام في الواجهة
             document.getElementById('price-bank').innerText = priceBank + " MAD";
             document.getElementById('price-paypal').innerText = pricePayPal + " MAD";
             document.getElementById('price-binance').innerText = priceBinance + " MAD";
@@ -282,7 +292,7 @@
             document.getElementById('price-whatsapp').innerText = priceWhatsapp + " MAD";
         }
 
-        // 4. معالجة وتوجيه الطلب
+        // التوجيه عند الضغط على زر الشراء
         function processOrder() {
             const methodElement = document.querySelector('input[name="payment_method"]:checked');
             if(!methodElement) return;
@@ -290,31 +300,25 @@
             const method = methodElement.value;
             let finalPriceToPay = 0;
 
-            // جلب السعر النهائي حسب الاختيار لإرساله لصفحة التأكيد أو الواتساب
             if(method === "تحويل بنكي") finalPriceToPay = Math.round(originalBankPrice * 0.85);
             else if(method === "PayPal") finalPriceToPay = Math.round(originalBankPrice * 0.90);
             else if(method === "Binance Pay") finalPriceToPay = Math.round(originalBankPrice * 0.90);
             else if(method === "وكالة كاش بليس") finalPriceToPay = Math.round(originalBankPrice * 0.93);
             else if(method === "تعبئة إنوي") finalPriceToPay = Math.round(originalInwiPrice * 0.95);
-            else finalPriceToPay = originalBankPrice; // واتساب
+            else finalPriceToPay = originalBankPrice;
 
-            // تأثير الزر أثناء التحميل
             const btn = document.getElementById('submitBtn');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تجهيز الطلب...';
             btn.classList.replace('bg-blue-600', 'bg-slate-700');
-            btn.classList.remove('shadow-[0_0_20px_rgba(59,130,246,0.4)]');
             
             setTimeout(() => {
-                // التوجيه الذكي
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس") {
-                    // يذهب لصفحة البنوك التي برمجناها (confirm.html)
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
-                    // يذهب للواتساب لباقي الطرق
                     const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${finalPriceToPay} درهم\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
