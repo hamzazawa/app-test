@@ -102,9 +102,9 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-1.5 pt-2 border-t border-slate-700/50 mt-1">
-                    <i class="fa-solid fa-fire text-orange-500 text-[11px] mt-0.5"></i>
-                    <div class="text-[10px] font-bold text-slate-400">
+                <div class="flex items-center justify-center gap-2 pt-3 border-t border-slate-700/50 mt-1">
+                    <i class="fa-solid fa-fire text-orange-500 text-sm"></i>
+                    <div class="text-xs font-bold text-slate-400">
                         <span class="text-orange-400" id="viewsCount">80</span> شخص نقر على هذا الحساب
                     </div>
                 </div>
@@ -133,10 +133,8 @@
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div class="flex items-center gap-1.5">
-                            <del id="old-price-bank" class="text-[10px] text-slate-500"></del>
-                            <div id="price-bank" class="text-sm font-black text-blue-400">0 MAD</div>
-                        </div>
+                        <div id="box-bank" class="flex items-center gap-1.5">
+                            </div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -153,17 +151,15 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold text-white">Binance Pay</span>
+                                <span class="text-sm font-bold text-white">Binance Pay (Pay ID)</span>
                                 <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-4%</span>
                             </div>
-                            <div class="text-[9px] text-slate-400 mt-1">USDT / Crypto (1$ = 10 MAD)</div>
+                            <div class="text-[9px] text-slate-400 mt-1">الدفع عبر الإرسال لحسابي (1$ = 10 MAD)</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div class="flex items-center gap-1.5">
-                            <del id="old-price-binance" class="text-[10px] text-slate-500"></del>
-                            <div id="price-binance" class="text-sm font-black text-blue-400">$0.00</div>
-                        </div>
+                        <div id="box-binance" class="flex items-center gap-1.5">
+                             </div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -187,10 +183,8 @@
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div class="flex items-center gap-1.5">
-                            <del id="old-price-cashplus" class="text-[10px] text-slate-500"></del>
-                            <div id="price-cashplus" class="text-sm font-black text-blue-400">0 MAD</div>
-                        </div>
+                        <div id="box-cashplus" class="flex items-center gap-1.5">
+                             </div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -214,10 +208,8 @@
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div class="flex items-center gap-1.5">
-                            <del id="old-price-inwi" class="text-[10px] text-slate-500"></del>
-                            <div id="price-inwi" class="text-sm font-black text-blue-400">0 MAD</div>
-                        </div>
+                        <div id="box-inwi" class="flex items-center gap-1.5">
+                             </div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -241,9 +233,8 @@
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div class="flex items-center gap-1.5">
-                            <div id="price-whatsapp" class="text-sm font-black text-slate-400">0 MAD</div>
-                        </div>
+                        <div id="box-whatsapp" class="flex items-center gap-1.5">
+                             </div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -267,33 +258,64 @@
     </div>
 
     <script>
+        // دالة آمنة لوضع الأسعار (السعر القديم المشطوب + الجديد)
+        function renderPriceBox(containerId, oldPrice, newPrice, symbol) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            
+            if(oldPrice === newPrice) {
+                container.innerHTML = `<span class="text-sm font-black text-blue-400">${newPrice} ${symbol}</span>`;
+            } else {
+                container.innerHTML = `
+                    <del class="text-[10px] text-slate-500 ml-1">${oldPrice} ${symbol}</del>
+                    <span class="text-sm font-black text-blue-400">${newPrice} ${symbol}</span>
+                `;
+            }
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         const accImg = urlParams.get('img');
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
 
+        // رقم المهتمين العشوائي
         document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
 
-        if(accTitle) {
+        let finalBinanceUsd = 0; // متغير لحفظ السعر النهائي للدولار
+
+        if(accTitle && originalBankPrice > 0) {
             document.getElementById('accTitle').innerText = accTitle;
             document.getElementById('accImg').src = accImg;
             document.getElementById('baseBankPrice').innerText = originalBankPrice + " MAD";
             document.getElementById('baseInwiPrice').innerText = originalInwiPrice + " MAD";
-            calculateDiscounts();
+            
+            // حساب الأسعار
+            const pBank = originalBankPrice;
+            const pInwi = originalInwiPrice;
+
+            const newBank = Math.round(pBank * 0.93);      // -7%
+            const newCashPlus = Math.round(pBank * 0.96);  // -4%
+            const newInwi = Math.round(pInwi * 0.96);      // -4%
+            const newWhatsapp = pBank;                     // 0%
+            
+            // حساب بينانس بالدولار (10 دراهم = 1 دولار)
+            const oldBinance = (pBank / 10).toFixed(2);
+            finalBinanceUsd = ((pBank * 0.96) / 10).toFixed(2); // -4%
+
+            // طباعة الأسعار في الخانات المخصصة
+            renderPriceBox('box-bank', pBank, newBank, 'MAD');
+            renderPriceBox('box-binance', oldBinance, finalBinanceUsd, '$');
+            renderPriceBox('box-cashplus', pBank, newCashPlus, 'MAD');
+            renderPriceBox('box-inwi', pInwi, newInwi, 'MAD');
+            renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); // لا يوجد تخفيض
+
         } else {
             alert("حدث خطأ! المرجو العودة للمتجر واختيار الحساب من جديد.");
             window.location.href = 'index.html';
         }
 
-        function showToast(msg, isHeart = false) {
-            const toast = document.getElementById('toastNotif');
-            document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').className = isHeart ? "fa-solid fa-heart text-red-500 mr-1" : "fa-solid fa-check text-green-400 mr-1";
-            toast.classList.remove('opacity-0');
-            setTimeout(() => toast.classList.add('opacity-0'), 2500);
-        }
-
+        // المفضلة
         function toggleFavorite(btn) {
             const icon = btn.querySelector('i');
             if(icon.classList.contains('heart-active')) {
@@ -307,6 +329,7 @@
             }
         }
 
+        // المشاركة
         function shareAccount() {
             if (navigator.share) {
                 navigator.share({
@@ -320,36 +343,16 @@
             }
         }
 
-        let finalBinanceUsd = 0;
-
-        function calculateDiscounts() {
-            const pBank = originalBankPrice;
-            const pInwi = originalInwiPrice;
-
-            const priceBank = Math.round(pBank - (pBank * 0.07));      
-            const priceCashPlus = Math.round(pBank - (pBank * 0.04));  
-            const priceInwiDiscount = Math.round(pInwi - (pInwi * 0.04)); 
-            const priceWhatsapp = pBank;                               
-            
-            // حساب بينانس
-            const priceBinanceMad = pBank - (pBank * 0.04);
-            const originalBinanceUsd = (pBank / 10).toFixed(2);
-            finalBinanceUsd = (priceBinanceMad / 10).toFixed(2);
-
-            // عرض السعر الأصلي المشطوب (الخدعة النفسية)
-            document.getElementById('old-price-bank').innerText = pBank + " MAD";
-            document.getElementById('old-price-binance').innerText = "$" + originalBinanceUsd;
-            document.getElementById('old-price-cashplus').innerText = pBank + " MAD";
-            document.getElementById('old-price-inwi').innerText = pInwi + " MAD";
-            
-            // عرض السعر الجديد
-            document.getElementById('price-bank').innerText = priceBank + " MAD";
-            document.getElementById('price-binance').innerText = "$" + finalBinanceUsd;
-            document.getElementById('price-cashplus').innerText = priceCashPlus + " MAD";
-            document.getElementById('price-inwi').innerText = priceInwiDiscount + " MAD";
-            document.getElementById('price-whatsapp').innerText = priceWhatsapp + " MAD";
+        // الإشعارات
+        function showToast(msg, isHeart = false) {
+            const toast = document.getElementById('toastNotif');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').className = isHeart ? "fa-solid fa-heart text-red-500 mr-1" : "fa-solid fa-check text-green-400 mr-1";
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
         }
 
+        // إرسال الطلب والتوجيه
         function processOrder() {
             const methodElement = document.querySelector('input[name="payment_method"]:checked');
             if(!methodElement) return;
@@ -380,10 +383,11 @@
             btn.classList.replace('bg-blue-600', 'bg-slate-700');
             
             setTimeout(() => {
-                // بينانس، بنك، وكاش بليس يذهبون جميعاً لصفحة التأكيد
+                // توجيه بينانس والبنك وكاش بليس لصفحة التأكيد
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance Pay") {
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
+                    // الباقي للواتساب
                     const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${priceTextForWa}\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
