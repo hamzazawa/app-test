@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حالة الطلب - EPEC STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        
+        .success-glow {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+            to { box-shadow: 0 0 25px rgba(34, 197, 94, 0.6); }
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen items-center justify-center p-4 relative overflow-hidden">
+
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/20 via-slate-900 to-slate-900 -z-10"></div>
+
+    <div class="w-full max-w-sm">
+        
+        <div class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 success-glow ring-8 ring-green-500/20 border-4 border-slate-900 relative">
+            <i class="fa-solid fa-check text-4xl text-white"></i>
+            <span class="absolute right-0 top-0 flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-white"></span>
+            </span>
+        </div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-black text-white mb-2">تم استلام طلبك بنجاح!</h1>
+            <p class="text-sm text-slate-400 leading-relaxed">
+                سنراجع المعلومات ونرد عليك في الواتساب بسرعة فائقة.
+            </p>
+        </div>
+
+        <div class="bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-2xl p-5 mb-6 shadow-xl">
+            <h2 class="text-xs font-bold text-slate-400 mb-4 border-b border-slate-700 pb-2">تفاصيل العملية</h2>
+            
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-slate-400"><i class="fa-solid fa-hashtag mr-1"></i> رقم المرجع:</span>
+                    <span id="orderId" class="font-mono font-bold text-blue-400 text-sm">EPEC-XXXX</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-slate-400"><i class="fa-solid fa-users mr-1"></i> ترتيبك في اللائحة:</span>
+                    <span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded font-bold text-xs" id="queueNum">1</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> الوقت المقدر للاستلام:</span>
+                    <span class="font-bold text-emerald-400 text-xs">أقل من 10 دقائق</span>
+                </div>
+                
+                <div class="flex justify-between items-center border-t border-slate-700/50 pt-3 mt-1">
+                    <span class="text-xs text-slate-400">المبلغ المدفوع:</span>
+                    <span id="pricePaid" class="font-black text-white text-sm">0 MAD</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-slate-400">طريقة الدفع:</span>
+                    <span id="paymentMethod" class="font-bold text-slate-300 text-xs">جاري التحميل</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <button onclick="history.back()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-3.5 rounded-xl transition flex justify-center items-center gap-2 text-sm shadow-md">
+                <i class="fa-solid fa-pen-to-square"></i> تعديل معلوماتي
+            </button>
+            
+            <a href="https://wa.me/212663011890?text=سلام،%20أنا%20صاحب%20الطلب%20الجديد%20واش%20وصلكم؟" target="_blank" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3.5 rounded-xl transition flex justify-center items-center gap-2 text-sm shadow-[0_4px_15px_rgba(34,197,94,0.3)]">
+                <i class="fa-brands fa-whatsapp text-lg"></i> تواصل مع الدعم عبر الواتساب
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // قراءة البيانات من الرابط وعرضها
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        const price = urlParams.get('price');
+        const method = urlParams.get('method');
+
+        if(orderId && price && method) {
+            document.getElementById('orderId').innerText = orderId;
+            const symbol = method.includes("Binance") ? "$" : " MAD";
+            document.getElementById('pricePaid').innerText = price + symbol;
+            document.getElementById('paymentMethod').innerText = method;
+            
+            // توليد رقم عشوائي بين 1 و 4 لترتيب الزبون
+            document.getElementById('queueNum').innerText = Math.floor(Math.random() * 4) + 1;
+        } else {
+            // إذا دخل الصفحة مباشرة بدون طلب
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
