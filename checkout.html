@@ -1,4 +1,3 @@
-                    
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -11,7 +10,6 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
         
-        /* تصميم اختيار الدفع التفاعلي */
         .payment-label input:checked + div { 
             border-color: #3b82f6; 
             background-color: rgba(59, 130, 246, 0.1); 
@@ -23,10 +21,17 @@
         }
         .payment-label input:checked + div .check-circle i { opacity: 1; }
         
-        /* إخفاء شريط التمرير */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        
+        /* تأثير النبض للقلب */
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .heart-active { color: #ef4444; animation: heartBeat 0.3s ease-in-out forwards; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -44,7 +49,7 @@
 
     <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
         
-        <button onclick="alert('سيتم إضافة الفيديو قريباً!')" class="w-full mb-6 bg-gradient-to-r from-slate-800 to-slate-800 border border-slate-700 hover:border-blue-500/50 rounded-xl p-3 flex items-center justify-between transition group shadow-sm">
+        <button onclick="alert('سيتم إضافة الفيديو قريباً!')" class="w-full mb-5 bg-gradient-to-r from-slate-800 to-slate-800 border border-slate-700 hover:border-blue-500/50 rounded-xl p-3 flex items-center justify-between transition group shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition shadow-inner">
                     <i class="fa-solid fa-play ml-0.5 text-xs"></i>
@@ -54,15 +59,40 @@
             <i class="fa-solid fa-chevron-left text-slate-500 text-xs"></i>
         </button>
 
-        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden mb-6 shadow-lg">
+        <div class="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-6 shadow-sm">
+            <div class="bg-emerald-500/20 w-10 h-10 rounded-full flex items-center justify-center text-emerald-400 shrink-0">
+                <i class="fa-solid fa-stopwatch text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-emerald-400 mb-0.5">التسليم في 10 دقائق كحد أقصى</p>
+                <p class="text-[10px] text-slate-400">مع دعم فني كامل أثناء وبعد عملية الشراء</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden mb-8 shadow-lg">
             <div class="relative h-48 w-full bg-slate-900 border-b border-slate-700">
                 <img id="accImg" src="" alt="Account Image" class="w-full h-full object-cover">
             </div>
             
             <div class="p-4">
-                <h2 id="accTitle" class="text-sm font-bold text-white leading-relaxed mb-4 text-center">جاري التحميل...</h2>
+                <div class="mb-3 flex justify-between items-start">
+                    <span class="inline-flex items-center gap-1.5 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-[10px] font-black px-2.5 py-1.5 rounded-lg shadow-sm">
+                        <i class="fa-solid fa-link text-xs"></i> مربوط بـ KONAMI ID
+                    </span>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="toggleFavorite(this)" class="text-slate-400 transition" title="إضافة للمفضلة">
+                            <i class="fa-solid fa-heart text-xl"></i>
+                        </button>
+                        <button onclick="shareAccount()" class="text-slate-400 hover:text-blue-500 transition" title="مشاركة الحساب">
+                            <i class="fa-solid fa-share-nodes text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <h2 id="accTitle" class="text-sm font-bold text-white leading-relaxed mb-4">جاري التحميل...</h2>
                 
-                <div class="flex items-center justify-between bg-slate-900 rounded-xl p-3 border border-slate-700/50 mb-4">
+                <div class="flex items-center justify-between bg-slate-900 rounded-xl p-3 border border-slate-700/50 mb-3">
                     <div class="text-center w-1/2 border-l border-slate-700">
                         <p class="text-[10px] text-slate-400 mb-0.5">سعر البنك</p>
                         <p id="baseBankPrice" class="font-bold text-sm text-slate-200">0 MAD</p>
@@ -73,21 +103,10 @@
                     </div>
                 </div>
 
-                <div class="flex justify-center">
-                    <span class="inline-flex items-center gap-1.5 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-[10px] font-black px-4 py-1.5 rounded-full shadow-sm">
-                        <i class="fa-solid fa-link text-xs"></i> مربوط بـ KONAMI ID
-                    </span>
+                <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 pt-2 border-t border-slate-700/50">
+                    <i class="fa-solid fa-fire text-orange-500 text-sm animate-pulse"></i>
+                    <span class="text-orange-400" id="viewsCount">45</span> شخص نقر على هذا الحساب
                 </div>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-6 shadow-sm">
-            <div class="bg-emerald-500/20 w-10 h-10 rounded-full flex items-center justify-center text-emerald-400 shrink-0">
-                <i class="fa-solid fa-stopwatch text-xl"></i>
-            </div>
-            <div>
-                <p class="text-xs font-bold text-emerald-400 mb-0.5">التسليم في 10 دقائق كحد أقصى</p>
-                <p class="text-[10px] text-slate-400">مع دعم فني كامل أثناء وبعد عملية الشراء</p>
             </div>
         </div>
 
@@ -109,7 +128,7 @@
                                 <span class="text-sm font-bold text-white">تحويل بنكي</span>
                                 <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-7%</span>
                             </div>
-                            <div class="text-[9px] text-slate-400 mt-1">CIH, Barid, Attijari, Pocket, CashPlus</div>
+                            <div class="text-[9px] text-slate-400 mt-1">CIH, Barid, Attijari, Pocket, CashPlus Virement</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
@@ -133,11 +152,11 @@
                                 <span class="text-sm font-bold text-white">Binance Pay</span>
                                 <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-4%</span>
                             </div>
-                            <div class="text-[9px] text-slate-400 mt-1">USDT (1$ = 10 MAD)</div>
+                            <div class="text-[9px] text-slate-400 mt-1">USDT / Crypto (1$ = 10 MAD)</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
-                        <div id="price-binance" class="text-sm font-black text-blue-400 dir-ltr">0.00 $</div>
+                        <div id="price-binance" class="text-sm font-black text-blue-400">$0.00</div>
                         <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
@@ -195,12 +214,12 @@
 
             <label class="payment-label cursor-pointer block">
                 <input type="radio" name="payment_method" value="مباشرة عبر الواتساب" class="hidden">
-                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group items-stretch">
+                <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-green-400 group-hover:text-white transition shadow-inner shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-green-400 group-hover:text-white transition shadow-inner">
                             <i class="fa-brands fa-whatsapp text-xl"></i>
                         </div>
-                        <div class="flex flex-col justify-center">
+                        <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-white">الشراء عبر واتساب</span>
                                 <span class="bg-slate-700 text-slate-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-600">0%</span>
@@ -208,9 +227,9 @@
                             <div class="text-[9px] text-slate-400 mt-1">تواصل مباشر لتأكيد الطلب</div>
                         </div>
                     </div>
-                    <div class="text-left flex flex-col items-end justify-center">
-                        <div id="price-whatsapp" class="text-[10px] font-black text-slate-300 text-left dir-ltr leading-tight"></div>
-                        <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors shrink-0">
+                    <div class="text-left flex flex-col items-end">
+                        <div id="price-whatsapp" class="text-sm font-black text-slate-400">0 MAD</div>
+                        <div class="w-4 h-4 rounded-full border-2 border-slate-600 flex items-center justify-center mt-1 check-circle transition-colors">
                             <i class="fa-solid fa-check text-[8px] text-white opacity-0 transition-opacity"></i>
                         </div>
                     </div>
@@ -228,68 +247,115 @@
 
     </main>
 
+    <div id="toastNotif" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 z-[100] pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-check text-green-400 mr-1"></i> <span id="toastMsg">تم النسخ</span>
+    </div>
+
     <script>
-        // جلب البيانات من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         const accImg = urlParams.get('img');
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
 
-        // التحقق وتعبئة الواجهة
+        // توليد رقم عشوائي للمهتمين بالحساب
+        document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
+
         if(accTitle) {
             document.getElementById('accTitle').innerText = accTitle;
             document.getElementById('accImg').src = accImg;
             document.getElementById('baseBankPrice').innerText = originalBankPrice + " MAD";
             document.getElementById('baseInwiPrice').innerText = originalInwiPrice + " MAD";
-            
             calculateDiscounts();
         } else {
             alert("حدث خطأ! المرجو العودة للمتجر واختيار الحساب من جديد.");
             window.location.href = 'index.html';
         }
 
-        // الحسابات الرياضية للتخفيضات وتحويل الدولار
+        // إظهار إشعار مؤقت
+        function showToast(msg, isHeart = false) {
+            const toast = document.getElementById('toastNotif');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').className = isHeart ? "fa-solid fa-heart text-red-500 mr-1" : "fa-solid fa-check text-green-400 mr-1";
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+
+        // المفضلة
+        function toggleFavorite(btn) {
+            const icon = btn.querySelector('i');
+            if(icon.classList.contains('heart-active')) {
+                icon.classList.remove('heart-active');
+                icon.classList.add('text-slate-400');
+                showToast('تمت الإزالة من المفضلة');
+            } else {
+                icon.classList.remove('text-slate-400');
+                icon.classList.add('heart-active');
+                showToast('تمت الإضافة للمفضلة بنجاح', true);
+            }
+        }
+
+        // المشاركة
+        function shareAccount() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EPEC STORE - حساب احترافي',
+                    text: `شاهد هذا الحساب الأسطوري: ${accTitle}`,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('تم نسخ الرابط لمشاركته');
+            }
+        }
+
+        // الحسابات الرياضية
+        let finalBinanceUsd = 0; // للاحتفاظ بالثمن بالدولار
+
         function calculateDiscounts() {
             const pBank = originalBankPrice;
             const pInwi = originalInwiPrice;
 
-            // التخفيضات المطلوبة: بنك 7%، بينانس 4%، كاش بليس 4%، إنوي 4%
-            const priceBank = Math.round(pBank - (pBank * 0.07));      
-            const priceBinanceMad = pBank - (pBank * 0.04);   
-            const priceBinanceUSD = (priceBinanceMad / 10).toFixed(2); // تحويل للدولار 10 دراهم = 1 دولار
-            const priceCashPlus = Math.round(pBank - (pBank * 0.04));  
-            const priceInwiDiscount = Math.round(pInwi - (pInwi * 0.04)); 
+            const priceBank = Math.round(pBank - (pBank * 0.07));      // -7%
+            const priceCashPlus = Math.round(pBank - (pBank * 0.04));  // -4%
+            const priceInwiDiscount = Math.round(pInwi - (pInwi * 0.04)); // -4%
+            const priceWhatsapp = pBank;                               // 0%
+            
+            // حساب بينانس بالدرهم ثم تحويله للدولار (10 MAD = 1 $)
+            const priceBinanceMad = pBank - (pBank * 0.04);
+            finalBinanceUsd = (priceBinanceMad / 10).toFixed(2); // رقمين بعد الفاصلة
 
-            // تعبئة الأرقام
             document.getElementById('price-bank').innerText = priceBank + " MAD";
-            document.getElementById('price-binance').innerText = priceBinanceUSD + " $";
+            document.getElementById('price-binance').innerText = "$" + finalBinanceUsd;
             document.getElementById('price-cashplus').innerText = priceCashPlus + " MAD";
             document.getElementById('price-inwi').innerText = priceInwiDiscount + " MAD";
-            
-            // الواتساب (بدون تخفيض - يعرض السعرين)
-            document.getElementById('price-whatsapp').innerHTML = `${pBank} MAD (بنك)<br>${pInwi} MAD (تعبئة)`;
+            document.getElementById('price-whatsapp').innerText = priceWhatsapp + " MAD";
         }
 
-        // التوجيه عند الضغط على زر الشراء
+        // معالجة الطلب
         function processOrder() {
             const methodElement = document.querySelector('input[name="payment_method"]:checked');
             if(!methodElement) return;
             
             const method = methodElement.value;
-            let finalPriceToPay = "";
+            let finalPriceToPay = 0;
+            let priceTextForWa = "";
 
             if(method === "تحويل بنكي") {
-                finalPriceToPay = Math.round(originalBankPrice * 0.93) + " درهم";
+                finalPriceToPay = Math.round(originalBankPrice * 0.93);
+                priceTextForWa = finalPriceToPay + " درهم";
             } else if(method === "Binance Pay") {
-                let pMad = originalBankPrice * 0.96;
-                finalPriceToPay = (pMad / 10).toFixed(2) + " دولار (USDT)";
+                finalPriceToPay = finalBinanceUsd; // نستخدم الثمن بالدولار
+                priceTextForWa = "$" + finalPriceToPay;
             } else if(method === "وكالة كاش بليس") {
-                finalPriceToPay = Math.round(originalBankPrice * 0.96) + " درهم";
+                finalPriceToPay = Math.round(originalBankPrice * 0.96);
+                priceTextForWa = finalPriceToPay + " درهم";
             } else if(method === "تعبئة إنوي") {
-                finalPriceToPay = Math.round(originalInwiPrice * 0.96) + " درهم تعبئة";
+                finalPriceToPay = Math.round(originalInwiPrice * 0.96);
+                priceTextForWa = finalPriceToPay + " درهم";
             } else {
-                finalPriceToPay = `${originalBankPrice} درهم (بنك) / ${originalInwiPrice} درهم (تعبئة)`;
+                finalPriceToPay = originalBankPrice;
+                priceTextForWa = finalPriceToPay + " درهم";
             }
 
             const btn = document.getElementById('submitBtn');
@@ -298,11 +364,9 @@
             
             setTimeout(() => {
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس") {
-                    // إرسال الرقم الصافي للصفحة الموالية
-                    let numPrice = method === "وكالة كاش بليس" ? Math.round(originalBankPrice * 0.96) : Math.round(originalBankPrice * 0.93);
-                    window.location.href = `confirm.html?price=${numPrice}&method=${encodeURIComponent(method)}`;
+                    window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
-                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPriceToPay}\n\nواش متوفر باش ندفع دابا؟`;
+                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${priceTextForWa}\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
             }, 800);
