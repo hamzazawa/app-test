@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
         
         .payment-label input:checked + div { 
             border-color: #3b82f6; 
@@ -102,8 +102,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center gap-2 pt-3 border-t border-slate-700/50 mt-1">
-                    <i class="fa-solid fa-fire text-orange-500 text-sm"></i>
+                <div class="flex items-center justify-center pt-3 border-t border-slate-700/50 mt-1">
                     <div class="text-xs font-bold text-slate-400">
                         <span class="text-orange-400" id="viewsCount">80</span> شخص نقر على هذا الحساب
                     </div>
@@ -111,14 +110,15 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between mb-4 px-1">
+        <div id="payment-section" class="flex items-center justify-between mb-4 px-1 scroll-mt-24">
             <h3 class="text-sm font-black text-slate-200">اختر طريقة الدفع</h3>
+            <span class="text-[10px] text-green-400 font-bold bg-green-900/20 px-2 py-1 rounded border border-green-500/20">تخفيضات حصرية</span>
         </div>
         
         <div class="space-y-3 mb-8">
             
             <label class="payment-label cursor-pointer block">
-                <input type="radio" name="payment_method" value="تحويل بنكي" class="hidden" checked>
+                <input type="radio" name="payment_method" value="تحويل بنكي" class="hidden">
                 <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-slate-300 group-hover:text-white transition shadow-inner">
@@ -143,7 +143,7 @@
             </label>
 
             <label class="payment-label cursor-pointer block">
-                <input type="radio" name="payment_method" value="Binance Pay" class="hidden">
+                <input type="radio" name="payment_method" value="Binance" class="hidden">
                 <div class="border border-slate-700 bg-slate-800/60 rounded-xl p-3.5 transition flex items-center justify-between group">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-slate-700/80 flex items-center justify-center text-[#F3BA2F] group-hover:text-white transition shadow-inner">
@@ -151,7 +151,7 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold text-white">Binance Pay (Pay ID)</span>
+                                <span class="text-sm font-bold text-white">Binance</span>
                                 <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-500/20">-4%</span>
                             </div>
                             <div class="text-[9px] text-slate-400 mt-1">الدفع عبر الإرسال لحسابي (1$ = 10 MAD)</div>
@@ -253,8 +253,8 @@
 
     </main>
 
-    <div id="toastNotif" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 z-[100] pointer-events-none">
-        <i id="toastIcon" class="fa-solid fa-check text-green-400 mr-1"></i> <span id="toastMsg">تم النسخ</span>
+    <div id="toastNotif" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 z-[100] pointer-events-none flex items-center">
+        <i id="toastIcon" class="fa-solid fa-check text-green-400 mr-1"></i> <span id="toastMsg" class="mr-1">تم النسخ</span>
     </div>
 
     <script>
@@ -263,7 +263,7 @@
             const container = document.getElementById(containerId);
             if(!container) return;
             
-            if(oldPrice === newPrice) {
+            if(oldPrice == newPrice) {
                 container.innerHTML = `<span class="text-sm font-black text-blue-400">${newPrice} ${symbol}</span>`;
             } else {
                 container.innerHTML = `
@@ -308,7 +308,7 @@
             renderPriceBox('box-binance', oldBinance, finalBinanceUsd, '$');
             renderPriceBox('box-cashplus', pBank, newCashPlus, 'MAD');
             renderPriceBox('box-inwi', pInwi, newInwi, 'MAD');
-            renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); // لا يوجد تخفيض
+            renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); 
 
         } else {
             alert("حدث خطأ! المرجو العودة للمتجر واختيار الحساب من جديد.");
@@ -321,11 +321,11 @@
             if(icon.classList.contains('heart-active')) {
                 icon.classList.remove('heart-active');
                 icon.classList.add('text-slate-400');
-                showToast('تمت الإزالة من المفضلة');
+                showCustomToast('تمت الإزالة من المفضلة', 'fa-solid fa-heart-crack text-slate-400');
             } else {
                 icon.classList.remove('text-slate-400');
                 icon.classList.add('heart-active');
-                showToast('تمت الإضافة للمفضلة بنجاح', true);
+                showCustomToast('تمت الإضافة للمفضلة بنجاح', 'fa-solid fa-heart text-red-500');
             }
         }
 
@@ -339,15 +339,15 @@
                 }).catch(console.error);
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                showToast('تم نسخ الرابط لمشاركته');
+                showCustomToast('تم نسخ الرابط لمشاركته', 'fa-solid fa-check text-green-400');
             }
         }
 
-        // الإشعارات
-        function showToast(msg, isHeart = false) {
+        // دالة الإشعارات المخصصة
+        function showCustomToast(msg, iconClass) {
             const toast = document.getElementById('toastNotif');
             document.getElementById('toastMsg').innerText = msg;
-            document.getElementById('toastIcon').className = isHeart ? "fa-solid fa-heart text-red-500 mr-1" : "fa-solid fa-check text-green-400 mr-1";
+            document.getElementById('toastIcon').className = iconClass;
             toast.classList.remove('opacity-0');
             setTimeout(() => toast.classList.add('opacity-0'), 2500);
         }
@@ -355,7 +355,13 @@
         // إرسال الطلب والتوجيه
         function processOrder() {
             const methodElement = document.querySelector('input[name="payment_method"]:checked');
-            if(!methodElement) return;
+            
+            // 1. التحقق من الاختيار وإجبار المستخدم على السكرول
+            if(!methodElement) {
+                showCustomToast('المرجو اختيار طريقة الدفع أولاً!', 'fa-solid fa-circle-exclamation text-yellow-500');
+                document.getElementById('payment-section').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
             
             const method = methodElement.value;
             let finalPriceToPay = 0;
@@ -364,7 +370,7 @@
             if(method === "تحويل بنكي") {
                 finalPriceToPay = Math.round(originalBankPrice * 0.93);
                 priceTextForWa = finalPriceToPay + " درهم";
-            } else if(method === "Binance Pay") {
+            } else if(method === "Binance") {
                 finalPriceToPay = finalBinanceUsd; 
                 priceTextForWa = "$" + finalPriceToPay;
             } else if(method === "وكالة كاش بليس") {
@@ -378,20 +384,28 @@
                 priceTextForWa = finalPriceToPay + " درهم";
             }
 
+            // 2. تغيير شكل الزر
             const btn = document.getElementById('submitBtn');
+            const originalHTML = btn.innerHTML; // حفظ الشكل الأصلي
+            const originalClass = btn.className;
+
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تجهيز الطلب...';
             btn.classList.replace('bg-blue-600', 'bg-slate-700');
             
             setTimeout(() => {
+                // 3. إرجاع الزر لشكله الأصلي تحسباً لرجوع المستخدم للصفحة
+                btn.innerHTML = originalHTML;
+                btn.className = originalClass;
+
                 // توجيه بينانس والبنك وكاش بليس لصفحة التأكيد
-                if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance Pay") {
+                if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance") {
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
                     // الباقي للواتساب
                     const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${priceTextForWa}\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
-            }, 800);
+            }, 1000);
         }
     </script>
 </body>
