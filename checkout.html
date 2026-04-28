@@ -12,7 +12,7 @@
         .payment-label input:checked + div { border-color: #3b82f6; background-color: #eff6ff; }
         .payment-label input:checked + div .check-circle { background-color: #3b82f6; border-color: #3b82f6; }
         .payment-label input:checked + div .check-circle i { opacity: 1; }
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { height: 4px; width: 4px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
@@ -49,22 +49,15 @@
             </div>
             
             <div class="p-4">
-                <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
-                    <span class="text-xs font-black text-blue-600 whitespace-nowrap ml-1">الروابط:</span>
-                    
-                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
-                        <span class="text-[11px] font-bold text-gray-700">KONAMI ID</span>
-                        <i class="fa-solid fa-check text-green-500 text-[12px]"></i>
-                    </div>
-                    
-                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
-                        <span class="text-[11px] font-bold text-gray-700">Google Play</span>
-                        <span class="text-red-500 font-black text-[10px]">NO</span>
-                    </div>
-                    
-                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
-                        <span class="text-[11px] font-bold text-gray-700">Game Center</span>
-                        <span class="text-red-500 font-black text-[10px]">NO</span>
+                
+                <div class="flex items-center justify-between gap-2 mb-4 bg-gray-50 border border-gray-100 p-2.5 rounded-lg w-full overflow-x-auto whitespace-nowrap" dir="ltr">
+                    <span class="text-[11px] font-black text-blue-600 tracking-wide mr-2">Links:</span>
+                    <div class="flex items-center gap-1.5 text-[9px] font-bold text-gray-800 font-sans">
+                        <span class="flex items-center gap-1">KONAMI ID <i class="fa-solid fa-check text-green-500 text-[10px]"></i></span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-1">Google Play <span class="text-red-500 font-black mt-0.5">NO</span></span>
+                        <span class="text-gray-300">|</span>
+                        <span class="flex items-center gap-1">Game Center <span class="text-red-500 font-black mt-0.5">NO</span></span>
                     </div>
                 </div>
 
@@ -81,7 +74,13 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center pt-2 mt-1">
+                <div class="text-center mb-2">
+                    <p class="text-[10px] font-bold text-gray-400">
+                        <i class="fa-regular fa-calendar mr-1"></i> تاريخ إضافة الحساب: <span id="addedDate" class="text-gray-500"></span>
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-center pt-2 border-t border-gray-100 mt-2">
                     <div class="text-[11px] font-bold text-gray-500">
                         <span class="text-orange-500" id="viewsCount">80</span> شخص نقر على هذا الحساب
                     </div>
@@ -108,7 +107,7 @@
                                 <span class="text-sm font-bold text-gray-900">تحويل بنكي</span>
                                 <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-7%</span>
                             </div>
-                            <div class="flex items-center gap-2 mt-1.5">
+                            <div class="flex items-center gap-1.5 mt-1.5">
                                 <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" class="h-3 object-contain">
@@ -257,6 +256,9 @@
         const accImg = urlParams.get('img');
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
+
+        const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        document.getElementById('addedDate').innerText = new Date().toLocaleDateString('en-GB', dateOptions);
 
         document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
 
