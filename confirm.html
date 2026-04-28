@@ -113,14 +113,17 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-red-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
-                    <div class="absolute right-0 top-0 w-1.5 h-full bg-red-500"></div>
-                    <div class="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-2.5 rounded-lg mb-3 flex gap-2">
-                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
-                        <p>يجب أن تختار <span class="font-black underline">تحويل فوري (Virement Instantané)</span> وإلا سيتأخر طلبك 24 ساعة!</p>
+                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-slate-800"></div>
+                    <h4 class="text-sm font-black text-gray-800 mb-3 border-b border-gray-100 pb-2">تحويل من بنك آخر</h4>
+                    
+                    <div class="bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-bold p-2.5 rounded-lg mb-3 flex gap-2">
+                        <i class="fa-solid fa-circle-info mt-0.5"></i>
+                        <p>المرجو اختيار <span class="font-black underline">تحويل فوري (Virement Instantané)</span> وإلا سيتأخر طلبك 48 ساعة!</p>
                     </div>
+                    
                     <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold text-gray-800">تحويل من بنك آخر (نحو التجاري)</span>
+                        <span class="text-xs font-bold text-gray-600">نحو (التجاري وفا بنك)</span>
                         <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
                     <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
@@ -169,7 +172,7 @@
             </button>
         </div>
 
-        <div id="step-fill-proof" class="hidden opacity-0 transition-opacity duration-500 mt-4">
+        <div id="step-fill-proof" class="hidden opacity-0 transition-opacity duration-500 mt-4 pb-10">
             
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mb-6">
                 <h3 class="text-sm font-black text-gray-800 mb-4 border-b border-gray-100 pb-3">إثبات الدفع ومعلومات الاستلام</h3>
@@ -219,7 +222,7 @@
                     <div id="inwi-section" class="hidden space-y-3 bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4">
                         <label class="block text-xs font-black text-purple-800 mb-2">أدخل رموز التعبئة إنوي (*9) <span class="text-red-500">*</span></label>
                         <div id="inwi-inputs">
-                            <div class="flex gap-2 mb-2">
+                            <div class="flex gap-2 mb-2 items-center">
                                 <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
                                     <option value="5">5 دراهم</option>
                                     <option value="10" selected>10 دراهم</option>
@@ -232,13 +235,16 @@
                                 </select>
                                 <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
                             </div>
-                            <div class="flex gap-2 mb-2">
+                            <div class="flex gap-2 mb-2 items-center">
                                 <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
                                     <option value="5">5 دراهم</option>
                                     <option value="10">10 دراهم</option>
                                     <option value="20" selected>20 درهم</option>
                                     <option value="50">50 درهم</option>
                                     <option value="100">100 درهم</option>
+                                    <option value="200">200 درهم</option>
+                                    <option value="300">300 درهم</option>
+                                    <option value="500">500 درهم</option>
                                 </select>
                                 <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
                             </div>
@@ -305,13 +311,12 @@
                 document.getElementById('inwi-section').classList.remove('hidden');
                 showProofSection(true); 
             } else {
-                // إظهار جميع البنوك
                 document.getElementById('banks-container').classList.remove('hidden');
                 document.getElementById('bank-selector-wrapper-proof').classList.remove('hidden');
             }
         }
 
-        // إظهار الاستمارة وعمل سكرول للأعلى تماماً
+        // السكرول للأعلى عند ضغط "أرسلت المال"
         function showProofSection(isInwi = false) {
             document.getElementById('step-send-money').classList.add('hidden');
             const proofSec = document.getElementById('step-fill-proof');
@@ -321,7 +326,7 @@
 
             setTimeout(() => {
                 proofSec.classList.remove('opacity-0');
-                // رفع الصفحة للأعلى
+                // توجيه الشاشة مباشرة لبداية الاستمارة
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
@@ -332,19 +337,26 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // إضافة حقل إنوي مع زر الحذف
         function addInwiRow() {
             const container = document.getElementById('inwi-inputs');
             const row = document.createElement('div');
-            row.className = 'flex gap-2 mb-2';
+            row.className = 'flex gap-2 mb-2 items-center';
             row.innerHTML = `
-                <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
+                <select class="w-[30%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
                     <option value="5">5 دراهم</option>
                     <option value="10">10 دراهم</option>
                     <option value="20" selected>20 درهم</option>
                     <option value="50">50 درهم</option>
                     <option value="100">100 درهم</option>
+                    <option value="200">200 درهم</option>
+                    <option value="300">300 درهم</option>
+                    <option value="500">500 درهم</option>
                 </select>
-                <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
+                <input type="text" placeholder="الرمز (16 رقم)" class="w-[60%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
+                <button type="button" onclick="this.parentElement.remove()" class="w-[10%] text-red-400 hover:text-red-600 transition flex justify-center items-center p-2 rounded bg-white border border-red-200">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
             `;
             container.appendChild(row);
         }
@@ -391,7 +403,7 @@
 
             if(method === "تحويل بنكي") {
                 const b = document.querySelector('input[name="sent_bank"]:checked');
-                if(!b) { alert("المرجو تحديد البنك الذي أرسلت إليه المال."); return; }
+                if(!b) { alert("المرجو تحديد البنك الذي أرسلت إليه المال (أعلى النموذج)."); return; }
                 selectedBankStr = b.value;
             }
 
