@@ -12,8 +12,6 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        
-        /* تأثير اختيار البنك */
         .bank-radio input:checked + div { border-color: #3b82f6; background-color: #eff6ff; }
         .bank-radio input:checked + div .check-icon { display: block; }
     </style>
@@ -40,10 +38,23 @@
         </div>
 
         <div id="step-send-money" class="transition-all duration-500">
-            <h3 class="text-sm font-black text-gray-800 mb-4 px-1"><i class="fa-solid fa-building-columns text-gray-400 mr-1"></i> أرسل المبلغ إلى أحد الحسابات:</h3>
+            <h3 id="step1-title" class="text-sm font-black text-gray-800 mb-4 px-1"><i class="fa-solid fa-building-columns text-gray-400 mr-1"></i> أرسل المبلغ إلى أحد الحسابات:</h3>
             
             <div id="banks-container" class="space-y-3 hidden mb-6">
-                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-600 mb-2">اختر البنك الذي تريد التحويل إليه:</label>
+                    <select id="bankChoice" onchange="showSelectedBank()" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-blue-500 outline-none shadow-sm font-bold">
+                        <option value="" disabled selected>-- المرجو اختيار بنك --</option>
+                        <option value="cih">CIH Bank</option>
+                        <option value="attijari">التجاري وفا بنك</option>
+                        <option value="barid">بريد بنك</option>
+                        <option value="pocket">Pocket Bank (الشعبي)</option>
+                        <option value="cashplus_app">تطبيق كاش بليس (CashPlus Mobile)</option>
+                        <option value="other">تحويل من بنك آخر (Virement)</option>
+                    </select>
+                </div>
+
+                <div id="bank-cih" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f47b20]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" alt="CIH" class="h-6 object-contain rounded">
@@ -57,7 +68,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div id="bank-attijari" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f7b000]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" alt="Attijari" class="h-6 object-contain rounded">
@@ -71,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div id="bank-barid" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#005e8a]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" alt="Barid" class="h-6 object-contain rounded">
@@ -85,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div id="bank-pocket" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#2dbd93]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" alt="Pocket" class="h-6 object-contain rounded">
@@ -94,6 +105,39 @@
                     <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
                         <code id="pocketRib" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">2111191420920000</code>
                         <button onclick="copyElementText('pocketRib', this)" class="bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bank-cashplus-app" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#ffd700]"></div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mb-2">رقم الهاتف للتحويل من تطبيق كاش بليس:</p>
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="cpPhone" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">0708011007</code>
+                        <button onclick="copyElementText('cpPhone', this)" class="bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bank-other" class="bg-white border border-red-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-red-500"></div>
+                    <div class="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-2.5 rounded-lg mb-3 flex gap-2">
+                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                        <p>يجب أن تختار <span class="font-black underline">تحويل فوري (Virement Instantané)</span> وإلا سيتأخر طلبك 24 ساعة!</p>
+                    </div>
+                    <div class="flex justify-between items-center mb-3">
+                        <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" alt="Attijari" class="h-5 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="otherRib" class="text-[11px] font-bold text-gray-800 tracking-wider dir-ltr">007726000433930040247727</code>
+                        <button onclick="copyElementText('otherRib', this)" class="bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition shrink-0 ml-2">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
@@ -121,77 +165,104 @@
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#ffd700]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded">
-                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
-                        <code id="cashplusId" class="text-lg font-black text-gray-800 tracking-widest dir-ltr">0708011007</code>
-                        <button onclick="copyElementText('cashplusId', this)" class="bg-gray-200 hover:bg-yellow-500 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <p class="text-xs text-gray-600 mb-2 font-bold">المرجو إرسال المبلغ نقدًا من أي وكالة باسم:</p>
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <code id="cashplusName" class="text-lg font-black text-gray-800 tracking-widest dir-ltr">HAMZA ELKIRI</code>
+                        <button onclick="copyElementText('cashplusName', this)" class="bg-gray-200 hover:bg-yellow-500 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <button onclick="showProofSection()" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl transition shadow-lg shadow-green-500/30 flex justify-center items-center gap-2 text-sm">
-                <i class="fa-solid fa-check-double"></i> أرسلت المال - ملء المعلومات
+            <button id="goToProofBtn" onclick="showProofSection()" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl transition shadow-lg shadow-green-500/30 flex justify-center items-center gap-2 text-sm">
+                <i class="fa-solid fa-check-double"></i> أرسلت المال - إدخال المعلومات
             </button>
         </div>
 
         <div id="step-fill-proof" class="hidden opacity-0 transition-opacity duration-500">
             
             <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mb-6">
-                <h3 class="text-sm font-black text-gray-800 mb-4 border-b border-gray-100 pb-3">تأكيد الطلب ومعلومات الاستلام</h3>
+                <h3 class="text-sm font-black text-gray-800 mb-4 border-b border-gray-100 pb-3">إثبات الدفع ومعلومات الاستلام</h3>
                 
                 <div class="space-y-4">
                     
-                    <div id="bank-selector-wrapper" class="hidden">
-                        <label class="block text-[11px] font-bold text-gray-600 mb-2">إلى أي بنك قمت بإرسال المبلغ؟ <span class="text-red-500">*</span></label>
+                    <div id="bank-selector-wrapper-proof" class="hidden">
+                        <label class="block text-[11px] font-bold text-gray-600 mb-2">إلى أي حساب أرسلت المبلغ؟ <span class="text-red-500">*</span></label>
                         <div class="grid grid-cols-2 gap-2">
                             <label class="bank-radio cursor-pointer">
                                 <input type="radio" name="sent_bank" value="CIH Bank" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
                                     <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-4">
-                                    <span class="text-xs font-bold text-gray-700">CIH Bank</span>
-                                    <i class="fa-solid fa-circle-check text-blue-500 absolute top-1 right-1 hidden check-icon text-[10px]"></i>
+                                    <span class="text-[10px] font-bold text-gray-700">CIH Bank</span>
                                 </div>
                             </label>
                             <label class="bank-radio cursor-pointer">
                                 <input type="radio" name="sent_bank" value="Attijariwafa" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
                                     <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" class="h-4">
-                                    <span class="text-[10px] font-bold text-gray-700">Attijariwafa</span>
-                                    <i class="fa-solid fa-circle-check text-blue-500 absolute top-1 right-1 hidden check-icon text-[10px]"></i>
+                                    <span class="text-[10px] font-bold text-gray-700">Attijari</span>
                                 </div>
                             </label>
                             <label class="bank-radio cursor-pointer">
                                 <input type="radio" name="sent_bank" value="Barid Bank" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
                                     <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" class="h-4">
-                                    <span class="text-xs font-bold text-gray-700">Barid Bank</span>
-                                    <i class="fa-solid fa-circle-check text-blue-500 absolute top-1 right-1 hidden check-icon text-[10px]"></i>
+                                    <span class="text-[10px] font-bold text-gray-700">Barid Bank</span>
                                 </div>
                             </label>
                             <label class="bank-radio cursor-pointer">
                                 <input type="radio" name="sent_bank" value="Pocket Bank" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
                                     <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" class="h-4">
-                                    <span class="text-xs font-bold text-gray-700">Pocket Bank</span>
-                                    <i class="fa-solid fa-circle-check text-blue-500 absolute top-1 right-1 hidden check-icon text-[10px]"></i>
+                                    <span class="text-[10px] font-bold text-gray-700">Pocket Bank</span>
                                 </div>
                             </label>
                             <label class="bank-radio cursor-pointer col-span-2">
                                 <input type="radio" name="sent_bank" value="بنك آخر" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center justify-center gap-2 transition relative bg-gray-50">
-                                    <span class="text-xs font-bold text-gray-700">أرسلت من بنك آخر (Virement)</span>
-                                    <i class="fa-solid fa-circle-check text-blue-500 absolute top-2 right-2 hidden check-icon text-[10px]"></i>
+                                    <span class="text-[10px] font-bold text-gray-700">أرسلت من بنك آخر / تطبيق كاش بليس</span>
                                 </div>
                             </label>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">الاسم الكامل <span class="text-red-500">*</span></label>
-                        <input type="text" id="userName" placeholder="الاسم الشخصي والعائلي" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition">
+                    <div id="inwi-section" class="hidden space-y-3 bg-purple-50 p-4 rounded-xl border border-purple-200 mb-4">
+                        <label class="block text-xs font-black text-purple-800 mb-2">أدخل رموز التعبئة إنوي (*9) <span class="text-red-500">*</span></label>
+                        <div id="inwi-inputs">
+                            <div class="flex gap-2 mb-2">
+                                <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
+                                    <option value="5">5 دراهم</option>
+                                    <option value="10" selected>10 دراهم</option>
+                                    <option value="20">20 درهم</option>
+                                    <option value="50">50 درهم</option>
+                                    <option value="100">100 درهم</option>
+                                    <option value="200">200 درهم</option>
+                                    <option value="300">300 درهم</option>
+                                    <option value="500">500 درهم</option>
+                                </select>
+                                <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
+                                    <option value="5">5 دراهم</option>
+                                    <option value="10">10 دراهم</option>
+                                    <option value="20" selected>20 درهم</option>
+                                    <option value="50">50 درهم</option>
+                                    <option value="100">100 درهم</option>
+                                </select>
+                                <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addInwiRow()" class="text-xs font-bold text-purple-700 hover:text-purple-900 mt-1"><i class="fa-solid fa-plus bg-white rounded-full p-1 border border-purple-300"></i> إضافة فئة أخرى</button>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <div class="w-full">
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">الاسم الكامل <span class="text-red-500">*</span></label>
+                            <input type="text" id="userName" placeholder="الاسم الشخصي" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition">
+                        </div>
                     </div>
 
                     <div>
@@ -199,14 +270,9 @@
                         <input type="tel" id="userPhone" placeholder="06XXXXXXXX" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition dir-ltr text-right">
                     </div>
 
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">إثبات نصي (ملاحظة أو رقم التحويل)</label>
-                        <textarea id="proofText" rows="2" placeholder="اكتب اسم المرسل أو رقم العملية..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition resize-none"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">صورة إثبات التحويل (Screenshot)</label>
-                        <label class="cursor-pointer flex flex-col items-center justify-center border border-dashed border-gray-300 hover:border-blue-500 bg-gray-50 rounded-xl p-6 text-gray-500 hover:text-blue-500 transition">
+                    <div id="image-upload-wrapper">
+                        <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">صورة التوصيل Screenshot (اختياري)</label>
+                        <label class="cursor-pointer flex flex-col items-center justify-center border border-dashed border-gray-300 hover:border-blue-500 bg-gray-50 rounded-xl p-5 text-gray-500 hover:text-blue-500 transition">
                             <i class="fa-solid fa-cloud-arrow-up text-2xl mb-2"></i>
                             <span class="text-xs font-bold" id="fileName">اضغط هنا لإرفاق الصورة</span>
                             <input type="file" class="hidden" id="proofImage" accept="image/*" onchange="updateFileName(this)">
@@ -214,12 +280,12 @@
                     </div>
 
                     <button id="confirmBtn" onclick="submitToStatus()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl transition shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2 text-sm mt-4">
-                        <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال
+                        <i class="fa-solid fa-paper-plane"></i> تأكيد الطلب
                     </button>
                 </div>
             </div>
             
-            <button onclick="backToBanks()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition text-xs">
+            <button id="backBtn" onclick="backToBanks()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition text-xs">
                 الرجوع لرؤية الحسابات البنكية
             </button>
         </div>
@@ -246,29 +312,62 @@
                 document.getElementById('binance-container').classList.remove('hidden');
             } else if (method.includes("كاش بليس")) {
                 document.getElementById('cashplus-container').classList.remove('hidden');
+            } else if (method.includes("تعبئة إنوي")) {
+                // تجاوز مرحلة رؤية البنك والانتقال للنموذج مباشرة
+                document.getElementById('step1-title').innerText = "المرجو إدخال معلوماتك ورموز التعبئة:";
+                document.getElementById('goToProofBtn').classList.add('hidden');
+                document.getElementById('image-upload-wrapper').classList.add('hidden'); // لا يحتاج صورة
+                document.getElementById('inwi-section').classList.remove('hidden');
+                showProofSection(true); // إخفاء زر الرجوع
             } else {
                 document.getElementById('banks-container').classList.remove('hidden');
-                // بما أنه تحويل بنكي، يجب إظهار خيارات البنك في المرحلة 2
-                document.getElementById('bank-selector-wrapper').classList.remove('hidden');
+                document.getElementById('bank-selector-wrapper-proof').classList.remove('hidden');
             }
         }
 
-        // إخفاء البنوك وإظهار نموذج الإثبات
-        function showProofSection() {
+        function showSelectedBank() {
+            const banks = ['cih', 'attijari', 'barid', 'pocket', 'cashplus-app', 'other'];
+            banks.forEach(b => document.getElementById('bank-' + b)?.classList.add('hidden'));
+
+            const selected = document.getElementById('bankChoice').value;
+            if(selected) document.getElementById('bank-' + selected).classList.remove('hidden');
+        }
+
+        function showProofSection(isInwi = false) {
             document.getElementById('step-send-money').classList.add('hidden');
             const proofSec = document.getElementById('step-fill-proof');
             proofSec.classList.remove('hidden');
+            
+            if(isInwi) document.getElementById('backBtn').classList.add('hidden');
+
             setTimeout(() => {
                 proofSec.classList.remove('opacity-0');
-                proofSec.scrollIntoView({ behavior: 'smooth' });
+                proofSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50);
         }
 
-        // العودة للبنوك
         function backToBanks() {
             document.getElementById('step-fill-proof').classList.add('hidden', 'opacity-0');
             document.getElementById('step-send-money').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // إضافة حقل إنوي جديد
+        function addInwiRow() {
+            const container = document.getElementById('inwi-inputs');
+            const row = document.createElement('div');
+            row.className = 'flex gap-2 mb-2';
+            row.innerHTML = `
+                <select class="w-[35%] bg-white border border-purple-300 rounded-lg px-2 py-3 text-[11px] font-bold text-gray-800 outline-none">
+                    <option value="5">5 دراهم</option>
+                    <option value="10">10 دراهم</option>
+                    <option value="20" selected>20 درهم</option>
+                    <option value="50">50 درهم</option>
+                    <option value="100">100 درهم</option>
+                </select>
+                <input type="text" placeholder="الرمز (16 رقم)" class="w-[65%] bg-white border border-purple-300 rounded-lg px-3 py-3 text-sm text-gray-900 outline-none dir-ltr text-center font-mono">
+            `;
+            container.appendChild(row);
         }
 
         function copyRawText(text, btnElement) {
@@ -302,7 +401,7 @@
             const fileNameDisplay = document.getElementById('fileName');
             if(input.files && input.files.length > 0) {
                 fileNameDisplay.innerText = "تم إرفاق: " + input.files[0].name;
-                fileNameDisplay.classList.add('text-green-600');
+                fileNameDisplay.classList.add('text-blue-600');
             }
         }
 
@@ -313,7 +412,7 @@
 
             if(method === "تحويل بنكي") {
                 const b = document.querySelector('input[name="sent_bank"]:checked');
-                if(!b) { alert("المرجو تحديد البنك الذي أرسلت إليه المال."); return; }
+                if(!b) { alert("المرجو تحديد البنك الذي أرسلت إليه المال (أعلى النموذج)."); return; }
                 selectedBankStr = b.value;
             }
 
