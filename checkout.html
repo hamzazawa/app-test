@@ -42,32 +42,33 @@
             <i class="fa-solid fa-chevron-left text-gray-400 text-xs"></i>
         </button>
 
-        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-sm relative">
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-sm">
             
             <div class="relative h-48 w-full bg-gray-100 border-b border-gray-200">
                 <img id="accImg" src="" alt="Account Image" class="w-full h-full object-cover">
-                <div class="absolute top-3 right-3 bg-black/60 text-white text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md border border-white/10">
-                    <i class="fa-regular fa-calendar text-gray-300 mr-1"></i> <span id="addedDate"></span>
-                </div>
             </div>
             
             <div class="p-4">
-                <div class="flex items-center justify-center gap-3 mb-4 bg-gray-50 border border-gray-100 p-2.5 rounded-lg">
-                    <span class="text-[10px] font-black text-blue-600">الروابط:</span>
-                    <span class="text-[10px] font-bold text-gray-800 flex items-center">
-                        KONAMI ID <i class="fa-solid fa-check text-green-500 text-[10px] mr-1"></i>
-                    </span>
-                    <span class="text-gray-300">|</span>
-                    <span class="text-[10px] font-bold text-gray-800 flex items-center">
-                        Google Play <span class="text-red-500 font-black ml-1 text-[9px] mt-0.5">NO</span>
-                    </span>
-                    <span class="text-gray-300">|</span>
-                    <span class="text-[10px] font-bold text-gray-800 flex items-center">
-                        Game Center <span class="text-red-500 font-black ml-1 text-[9px] mt-0.5">NO</span>
-                    </span>
+                <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
+                    <span class="text-xs font-black text-blue-600 whitespace-nowrap ml-1">الروابط:</span>
+                    
+                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
+                        <span class="text-[11px] font-bold text-gray-700">KONAMI ID</span>
+                        <i class="fa-solid fa-check text-green-500 text-[12px]"></i>
+                    </div>
+                    
+                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
+                        <span class="text-[11px] font-bold text-gray-700">Google Play</span>
+                        <span class="text-red-500 font-black text-[10px]">NO</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg shadow-sm">
+                        <span class="text-[11px] font-bold text-gray-700">Game Center</span>
+                        <span class="text-red-500 font-black text-[10px]">NO</span>
+                    </div>
                 </div>
 
-                <h2 id="accTitle" class="text-sm font-bold text-gray-900 leading-relaxed mb-4">جاري التحميل...</h2>
+                <h2 id="accTitle" class="text-sm font-bold text-gray-900 leading-relaxed mb-4 text-center">جاري التحميل...</h2>
                 
                 <div class="flex items-center justify-between bg-blue-50 rounded-xl p-3 border border-blue-100 mb-3 shadow-inner">
                     <div class="text-center w-1/2 border-l border-blue-200">
@@ -81,7 +82,7 @@
                 </div>
 
                 <div class="flex items-center justify-center pt-2 mt-1">
-                    <div class="text-xs font-bold text-gray-500">
+                    <div class="text-[11px] font-bold text-gray-500">
                         <span class="text-orange-500" id="viewsCount">80</span> شخص نقر على هذا الحساب
                     </div>
                 </div>
@@ -256,11 +257,6 @@
         const accImg = urlParams.get('img');
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
-
-        // تنسيق التاريخ المطلوب DD/MM/YYYY
-        const today = new Date();
-        const formattedDate = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
-        document.getElementById('addedDate').innerText = formattedDate;
 
         document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
 
