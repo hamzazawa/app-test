@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -9,21 +8,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #f3f4f6; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .copy-btn:active { transform: scale(0.90); }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen relative pb-20">
 
-    <header class="bg-[#1e293b] border-b border-slate-800 py-4 sticky top-0 z-40 shadow-md">
+    <header class="bg-white border-b border-gray-200 py-4 sticky top-0 z-40 shadow-sm">
         <div class="container mx-auto px-4 max-w-md flex items-center justify-between">
-            <h1 class="text-sm font-black text-white flex items-center gap-2">
-                <i class="fa-solid fa-file-invoice-dollar text-blue-400 text-lg"></i> إتمام التحويل
+            <h1 class="text-sm font-black text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-blue-500 text-lg"></i> إتمام التحويل
             </h1>
-            <a href="javascript:history.back()" class="text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+            <a href="javascript:history.back()" class="text-gray-500 hover:text-gray-800 text-xs font-bold transition flex items-center gap-1 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
                 <i class="fa-solid fa-arrow-right"></i> رجوع
             </a>
         </div>
@@ -31,138 +30,141 @@
 
     <main class="container mx-auto px-4 py-6 max-w-md flex-grow">
         
-        <div class="bg-blue-600/10 border border-blue-500/30 rounded-2xl p-5 mb-6 text-center shadow-lg">
-            <p class="text-xs text-blue-300 font-bold mb-1">المبلغ المطلوب تحويله:</p>
-            <h2 id="amountDisplay" class="text-3xl font-black text-white tracking-wider">0</h2>
-            <p id="methodDisplay" class="text-[11px] text-slate-400 mt-2 bg-slate-900/50 inline-block px-3 py-1 rounded-full border border-slate-700/50">طريقة الدفع: جاري التحميل...</p>
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-6 text-center shadow-sm">
+            <p class="text-xs text-blue-600 font-bold mb-1">المبلغ المطلوب تحويله:</p>
+            <h2 id="amountDisplay" class="text-3xl font-black text-blue-800 tracking-wider">0</h2>
+            <p id="methodDisplay" class="text-[11px] text-gray-500 mt-2 bg-white inline-block px-3 py-1 rounded-full border border-gray-200">طريقة الدفع: جاري التحميل...</p>
         </div>
 
-        <div class="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-5 mb-8">
-            <h3 class="text-sm font-black text-slate-200 mb-5"><i class="fa-solid fa-list-check text-green-400 mr-1"></i> مراحل الشراء</h3>
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-8 shadow-sm">
+            <h3 class="text-sm font-black text-gray-800 mb-5"><i class="fa-solid fa-list-check text-green-500 mr-1"></i> مراحل الشراء</h3>
             
-            <div class="space-y-5 relative before:absolute before:inset-0 before:ml-3.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-slate-700 pr-4">
-                
+            <div class="space-y-5 relative before:absolute before:inset-0 before:ml-3.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gray-200 pr-4">
                 <div class="relative flex items-center gap-4">
-                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-[11px] font-black shadow-[0_0_15px_rgba(59,130,246,0.5)] ring-4 ring-slate-800 animate-pulse">1</div>
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-[11px] font-black ring-4 ring-white shadow-md">1</div>
                     <div>
-                        <h4 class="text-xs font-bold text-blue-400 mb-0.5">إرسال المال (أنت هنا)</h4>
-                        <p class="text-[10px] text-slate-400">قم بتحويل المبلغ لأحد الحسابات بالأسفل.</p>
+                        <h4 class="text-xs font-bold text-blue-600 mb-0.5">إرسال المال (أنت هنا)</h4>
+                        <p class="text-[10px] text-gray-500">قم بتحويل المبلغ لأحد الحسابات بالأسفل.</p>
                     </div>
                 </div>
-
                 <div class="relative flex items-center gap-4">
-                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 text-[11px] font-black ring-4 ring-slate-800">2</div>
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-[11px] font-black ring-4 ring-white">2</div>
                     <div>
-                        <h4 class="text-xs font-bold text-slate-400 mb-0.5">إثبات الدفع</h4>
-                        <p class="text-[10px] text-slate-500">أدخل معلوماتك وارفع صورة التوصيل.</p>
+                        <h4 class="text-xs font-bold text-gray-400 mb-0.5">إثبات الدفع</h4>
                     </div>
                 </div>
-
                 <div class="relative flex items-center gap-4">
-                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 text-[11px] font-black ring-4 ring-slate-800">3</div>
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-[11px] font-black ring-4 ring-white">3</div>
                     <div>
-                        <h4 class="text-xs font-bold text-slate-400 mb-0.5">المراجعة</h4>
-                        <p class="text-[10px] text-slate-500">سنتحقق من الدفعة في أسرع وقت.</p>
+                        <h4 class="text-xs font-bold text-gray-400 mb-0.5">المراجعة</h4>
                     </div>
                 </div>
-
                 <div class="relative flex items-center gap-4">
-                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 text-[11px] font-black ring-4 ring-slate-800">4</div>
+                    <div class="absolute -right-7 w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-[11px] font-black ring-4 ring-white">4</div>
                     <div>
-                        <h4 class="text-xs font-bold text-slate-400 mb-0.5">الاستلام</h4>
-                        <p class="text-[10px] text-slate-500">تستلم حسابك عبر الواتساب بأمان.</p>
+                        <h4 class="text-xs font-bold text-gray-400 mb-0.5">الاستلام</h4>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="mb-8">
-            <h3 class="text-sm font-black text-slate-200 mb-4 px-1"><i class="fa-solid fa-building-columns text-slate-400 mr-1"></i> أرسل المبلغ إلى:</h3>
+            <h3 class="text-sm font-black text-gray-800 mb-4 px-1"><i class="fa-solid fa-building-columns text-gray-400 mr-1"></i> معلومات الإرسال:</h3>
             
-            <div id="banks-container" class="space-y-3 hidden">
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+            <div id="bank-selector-wrapper" class="hidden mb-4">
+                <label class="block text-xs font-bold text-gray-600 mb-2">اختر البنك الذي تريد التحويل إليه:</label>
+                <select id="bankChoice" onchange="showSelectedBank()" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-800 focus:border-blue-500 outline-none shadow-sm">
+                    <option value="" disabled selected>-- المرجو اختيار بنك --</option>
+                    <option value="cih">CIH Bank</option>
+                    <option value="attijari">التجاري وفا بنك</option>
+                    <option value="barid">بريد بنك</option>
+                    <option value="pocket">Pocket Bank (الشعبي)</option>
+                    <option value="other">بنك آخر (تحويل من بنك مختلف)</option>
+                </select>
+            </div>
+            
+            <div id="bank-details-container">
+                
+                <div id="bank-cih" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f47b20]"></div>
+                    <div id="other-bank-note" class="hidden bg-blue-50 border border-blue-200 text-blue-700 text-[10px] p-2 rounded mb-3">يمكنك التحويل من أي بنك نحو حسابنا في CIH باستخدام رقم الـ RIB.</div>
                     <div class="flex justify-between items-center mb-3">
-                        <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" alt="CIH" class="h-6 object-contain rounded bg-white px-1 py-0.5">
-                        <span class="text-xs font-bold text-slate-300">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-slate-500 hover:text-white transition"><i class="fa-regular fa-copy"></i></button></span>
+                        <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" alt="CIH" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="cihRib" class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">5324182211032800</code>
-                        <button onclick="copyElementText('cihRib', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="cihRib" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">5324182211032800</code>
+                        <button onclick="copyElementText('cihRib', this)" class="copy-btn bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                <div id="bank-attijari" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f7b000]"></div>
                     <div class="flex justify-between items-center mb-3">
-                        <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" alt="Attijari" class="h-6 object-contain rounded bg-white px-1 py-0.5">
-                        <span class="text-xs font-bold text-slate-300">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-slate-500 hover:text-white transition"><i class="fa-regular fa-copy"></i></button></span>
+                        <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" alt="Attijari" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="attijariRib" class="text-[11px] font-bold text-slate-200 tracking-wider dir-ltr">007726000433930040247727</code>
-                        <button onclick="copyElementText('attijariRib', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition shrink-0 ml-2">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="attijariRib" class="text-[11px] font-bold text-gray-800 tracking-wider dir-ltr">007726000433930040247727</code>
+                        <button onclick="copyElementText('attijariRib', this)" class="copy-btn bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition shrink-0 ml-2">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                <div id="bank-barid" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#005e8a]"></div>
                     <div class="flex justify-between items-center mb-3">
-                        <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" alt="Barid" class="h-6 object-contain rounded bg-white px-1 py-0.5">
-                        <span class="text-xs font-bold text-slate-300">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-slate-500 hover:text-white transition"><i class="fa-regular fa-copy"></i></button></span>
+                        <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" alt="Barid" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="baridRib" class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">12650414</code>
-                        <button onclick="copyElementText('baridRib', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="baridRib" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">12650414</code>
+                        <button onclick="copyElementText('baridRib', this)" class="copy-btn bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                <div id="bank-pocket" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#2dbd93]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" alt="Pocket" class="h-6 object-contain rounded">
-                        <span class="text-xs font-bold text-slate-300">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-slate-500 hover:text-white transition"><i class="fa-regular fa-copy"></i></button></span>
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="pocketRib" class="text-sm font-bold text-slate-200 tracking-widest dir-ltr">2111191420920000</code>
-                        <button onclick="copyElementText('pocketRib', this)" class="copy-btn bg-slate-700 hover:bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="pocketRib" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">2111191420920000</code>
+                        <button onclick="copyElementText('pocketRib', this)" class="copy-btn bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <div id="binance-container" class="space-y-3 hidden">
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                <div id="bank-binance" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#f3ba2f]"></div>
                     <div class="flex justify-between items-center mb-3">
                         <img src="https://pbs.twimg.com/media/HGqcdt1XwAAwZ8I?format=png&name=small" alt="Binance" class="h-6 object-contain rounded">
-                        <span class="text-xs font-bold text-slate-400">Binance Pay ID</span>
+                        <span class="text-xs font-bold text-gray-600">Binance Pay ID</span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="binanceId" class="text-lg font-black text-yellow-500 tracking-widest dir-ltr">772023327</code>
-                        <button onclick="copyElementText('binanceId', this)" class="copy-btn bg-slate-700 hover:bg-yellow-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="binanceId" class="text-lg font-black text-yellow-600 tracking-widest dir-ltr">772023327</code>
+                        <button onclick="copyElementText('binanceId', this)" class="copy-btn bg-gray-200 hover:bg-yellow-500 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <div id="cashplus-container" class="space-y-3 hidden">
-                <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md relative overflow-hidden">
+                <div id="bank-cashplus" class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-[#ffd700]"></div>
                     <div class="flex justify-between items-center mb-3">
-                        <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded bg-white px-1 py-0.5">
-                        <span class="text-xs font-bold text-slate-300">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-slate-500 hover:text-white transition"><i class="fa-regular fa-copy"></i></button></span>
+                        <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded">
+                        <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <div class="flex justify-between items-center bg-slate-900 rounded-lg p-2 border border-slate-700/50">
-                        <code id="cashplusId" class="text-lg font-black text-slate-200 tracking-widest dir-ltr">0708011007</code>
-                        <button onclick="copyElementText('cashplusId', this)" class="copy-btn bg-slate-700 hover:bg-yellow-600 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+                    <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
+                        <code id="cashplusId" class="text-lg font-black text-gray-800 tracking-widest dir-ltr">0708011007</code>
+                        <button onclick="copyElementText('cashplusId', this)" class="copy-btn bg-gray-200 hover:bg-yellow-500 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
@@ -171,41 +173,35 @@
 
         </div>
 
-        <div id="proof-section" class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-xl">
-            <h3 class="text-sm font-black text-slate-200 mb-4 border-b border-slate-700 pb-3">إثبات الدفع ومعلوماتك</h3>
+        <div id="proof-section" class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm scroll-mt-24">
+            <h3 class="text-sm font-black text-gray-800 mb-4 border-b border-gray-100 pb-3">إثبات الدفع ومعلوماتك</h3>
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">الاسم الكامل <span class="text-red-400">*</span></label>
-                    <div class="relative">
-                        <i class="fa-regular fa-user absolute right-3 top-3.5 text-slate-500"></i>
-                        <input type="text" id="userName" placeholder="الاسم الشخصي والعائلي" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition">
-                    </div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">الاسم الكامل <span class="text-red-500">*</span></label>
+                    <input type="text" id="userName" placeholder="الاسم الشخصي والعائلي" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition">
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">رقم الواتساب للاستلام <span class="text-red-400">*</span></label>
-                    <div class="relative">
-                        <i class="fa-brands fa-whatsapp absolute right-3 top-3.5 text-slate-500"></i>
-                        <input type="tel" id="userPhone" placeholder="06XXXXXXXX" class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition dir-ltr text-right">
-                    </div>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">رقم الواتساب للاستلام <span class="text-red-500">*</span></label>
+                    <input type="tel" id="userPhone" placeholder="06XXXXXXXX" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition dir-ltr text-right">
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">ملاحظة أو رقم التحويل</label>
-                    <textarea id="proofText" rows="2" placeholder="اكتب اسم المرسل أو رقم العملية..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition resize-none"></textarea>
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">إثبات نصي (ملاحظة أو رقم التحويل)</label>
+                    <textarea id="proofText" rows="2" placeholder="اكتب اسم المرسل أو رقم العملية..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:border-blue-500 outline-none transition resize-none"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 mb-1.5 ml-1">صورة إثبات التحويل (اختياري)</label>
-                    <label class="cursor-pointer flex flex-col items-center justify-center border border-dashed border-slate-500 hover:border-blue-500 bg-slate-900/50 rounded-xl p-6 text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 transition">
+                    <label class="block text-[11px] font-bold text-gray-600 mb-1.5 ml-1">صورة إثبات التحويل (اختياري)</label>
+                    <label class="cursor-pointer flex flex-col items-center justify-center border border-dashed border-gray-300 hover:border-blue-500 bg-gray-50 rounded-xl p-6 text-gray-500 hover:text-blue-500 transition">
                         <i class="fa-solid fa-cloud-arrow-up text-2xl mb-2"></i>
                         <span class="text-xs font-bold" id="fileName">اضغط هنا لاختيار صورة التوصيل</span>
                         <input type="file" class="hidden" id="proofImage" accept="image/*" onchange="updateFileName(this)">
                     </label>
                 </div>
 
-                <button id="confirmBtn" onclick="submitToStatus()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl transition shadow-[0_4px_15px_rgba(59,130,246,0.3)] flex justify-center items-center gap-2 text-sm mt-4">
+                <button id="confirmBtn" onclick="submitToStatus()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl transition shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2 text-sm mt-4">
                     <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال
                 </button>
             </div>
@@ -213,7 +209,7 @@
 
     </main>
 
-    <div id="toastNotif" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl border border-slate-700 opacity-0 transition-opacity duration-300 z-[100] pointer-events-none flex items-center">
+    <div id="toastNotif" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full text-xs font-bold shadow-xl opacity-0 transition-opacity duration-300 z-[100] pointer-events-none flex items-center">
         <i class="fa-solid fa-check text-green-400 mr-1"></i> <span id="toastMsg" class="mr-1">تم النسخ بنجاح</span>
     </div>
 
@@ -230,31 +226,49 @@
             document.getElementById('methodDisplay').innerText = `طريقة الدفع: ${method}`;
 
             if (method.includes("Binance")) {
-                document.getElementById('binance-container').classList.remove('hidden');
+                document.getElementById('bank-binance').classList.remove('hidden');
             } else if (method.includes("كاش بليس")) {
-                document.getElementById('cashplus-container').classList.remove('hidden');
+                document.getElementById('bank-cashplus').classList.remove('hidden');
             } else {
-                document.getElementById('banks-container').classList.remove('hidden');
+                // إظهار قائمة اختيار البنك
+                document.getElementById('bank-selector-wrapper').classList.remove('hidden');
             }
         }
 
-        // دالة لنسخ النصوص المباشرة (مثل الاسم)
+        // دالة عرض البنك المختار
+        function showSelectedBank() {
+            // إخفاء كل البنوك أولاً
+            const banks = ['cih', 'attijari', 'barid', 'pocket'];
+            banks.forEach(b => document.getElementById('bank-' + b).classList.add('hidden'));
+            document.getElementById('other-bank-note').classList.add('hidden');
+
+            const selected = document.getElementById('bankChoice').value;
+            
+            if(selected === 'other') {
+                // عرض CIH مع رسالة
+                document.getElementById('bank-cih').classList.remove('hidden');
+                document.getElementById('other-bank-note').classList.remove('hidden');
+            } else if(selected) {
+                // عرض البنك المختار
+                document.getElementById('bank-' + selected).classList.remove('hidden');
+            }
+        }
+
         function copyRawText(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const icon = btnElement.querySelector('i');
-                icon.className = 'fa-solid fa-check text-green-400';
+                icon.className = 'fa-solid fa-check text-green-500';
                 showToast('تم نسخ الاسم');
                 setTimeout(() => icon.className = 'fa-regular fa-copy', 2000);
             });
         }
 
-        // دالة لنسخ الأرقام من العناصر
         function copyElementText(elementId, btnElement) {
             const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
                 const icon = btnElement.querySelector('i');
                 const originalClass = icon.className;
-                icon.className = 'fa-solid fa-check text-green-400';
+                icon.className = 'fa-solid fa-check text-green-500';
                 showToast('تم النسخ بنجاح');
                 setTimeout(() => icon.className = originalClass, 2000);
             });
@@ -267,16 +281,14 @@
             setTimeout(() => toast.classList.add('opacity-0'), 2500);
         }
 
-        // تحديث اسم الصورة عند رفعها
         function updateFileName(input) {
             const fileNameDisplay = document.getElementById('fileName');
             if(input.files && input.files.length > 0) {
                 fileNameDisplay.innerText = "تم إرفاق: " + input.files[0].name;
-                fileNameDisplay.classList.add('text-green-400');
+                fileNameDisplay.classList.add('text-green-600');
             }
         }
 
-        // إرسال البيانات والتوجيه لصفحة التتبع
         function submitToStatus() {
             const userName = document.getElementById('userName').value.trim();
             const userPhone = document.getElementById('userPhone').value.trim();
@@ -286,15 +298,12 @@
                 return;
             }
 
-            // توليد رقم طلب عشوائي لتتبعه
             const randomOrderId = 'EPEC-' + Math.floor(1000 + Math.random() * 9000);
-
             const btn = document.getElementById('confirmBtn');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الطلب...';
-            btn.classList.replace('bg-blue-600', 'bg-slate-700');
+            btn.classList.replace('bg-blue-600', 'bg-gray-400');
             
             setTimeout(() => {
-                // توجيه لصفحة status.html وتمرير البيانات في الرابط
                 window.location.href = `status.html?orderId=${randomOrderId}&price=${price}&method=${encodeURIComponent(method)}&name=${encodeURIComponent(userName)}&phone=${userPhone}`;
             }, 1000);
         }
