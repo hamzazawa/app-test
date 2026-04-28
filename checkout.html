@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -48,15 +49,17 @@
             </div>
             
             <div class="p-4">
-                <div class="flex items-center flex-wrap gap-x-4 gap-y-2 mb-4 bg-gray-50 border border-gray-100 p-2 rounded-lg">
-                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
-                        <i class="fa-solid fa-gamepad text-gray-400"></i> KONAMI ID <i class="fa-solid fa-circle-check text-green-500 text-xs"></i>
+                
+                <div class="flex items-center gap-4 mb-4 bg-gray-50 border border-gray-100 p-2.5 rounded-lg overflow-x-auto whitespace-nowrap">
+                    <span class="text-xs font-black text-blue-600">الروابط:</span>
+                    <span class="flex items-center gap-1.5 text-[11px] font-bold text-gray-700">
+                        KONAMI ID <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
                     </span>
-                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
-                        <i class="fa-brands fa-google-play text-gray-400"></i> Google Play <i class="fa-solid fa-circle-xmark text-red-400 text-xs"></i>
+                    <span class="flex items-center gap-1.5 text-[11px] font-bold text-gray-700">
+                        Google Play <i class="fa-solid fa-circle-xmark text-red-400 text-sm"></i>
                     </span>
-                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
-                        <i class="fa-brands fa-apple text-gray-400"></i> Game Center <i class="fa-solid fa-circle-xmark text-red-400 text-xs"></i>
+                    <span class="flex items-center gap-1.5 text-[11px] font-bold text-gray-700">
+                        Game Center <i class="fa-solid fa-circle-xmark text-red-400 text-sm"></i>
                     </span>
                 </div>
 
@@ -74,6 +77,13 @@
                 </div>
 
                 <p class="text-[10px] font-bold text-gray-400 text-center mb-3"><i class="fa-regular fa-calendar text-gray-400 mr-1"></i> تاريخ إضافة الحساب: <span id="addedDate"></span></p>
+
+                <div class="flex items-center justify-center gap-2 pt-3 border-t border-gray-100 mt-2">
+                    <i class="fa-solid fa-fire text-orange-500 text-sm animate-pulse"></i>
+                    <div class="text-xs font-bold text-gray-500">
+                        <span class="text-orange-500" id="viewsCount">80</span> شخص نقر على هذا الحساب
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -250,6 +260,8 @@
         const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
         document.getElementById('addedDate').innerText = new Date().toLocaleDateString('ar-MA', dateOptions);
 
+        document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
+
         let finalBinanceUsd = 0;
 
         if(accTitle && originalBankPrice > 0) {
@@ -274,6 +286,7 @@
             renderPriceBox('box-cashplus', pBank, newCashPlus, 'MAD');
             renderPriceBox('box-inwi', pInwi, newInwi, 'MAD');
             renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); 
+
         } else {
             window.location.href = 'index.html';
         }
