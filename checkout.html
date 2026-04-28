@@ -9,17 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
-        
-        .payment-label input:checked + div { 
-            border-color: #3b82f6; 
-            background-color: #eff6ff; 
-        }
-        .payment-label input:checked + div .check-circle { 
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
+        .payment-label input:checked + div { border-color: #3b82f6; background-color: #eff6ff; }
+        .payment-label input:checked + div .check-circle { background-color: #3b82f6; border-color: #3b82f6; }
         .payment-label input:checked + div .check-circle i { opacity: 1; }
-        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -56,23 +48,21 @@
             </div>
             
             <div class="p-4">
-                <div class="flex flex-col gap-2 mb-4">
-                    <span class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 text-gray-700 text-[10px] font-bold px-2.5 py-1.5 rounded">
-                        <i class="fa-solid fa-circle-check text-green-500 text-sm"></i> مربوط بـ KONAMI ID
+                <div class="flex items-center flex-wrap gap-x-4 gap-y-2 mb-4 bg-gray-50 border border-gray-100 p-2 rounded-lg">
+                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
+                        <i class="fa-solid fa-gamepad text-gray-400"></i> KONAMI ID <i class="fa-solid fa-circle-check text-green-500 text-xs"></i>
                     </span>
-                    <span class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 text-gray-700 text-[10px] font-bold px-2.5 py-1.5 rounded">
-                        <i class="fa-solid fa-circle-xmark text-red-400 text-sm"></i> غير مربوط بـ GOOGLE PLAY
+                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
+                        <i class="fa-brands fa-google-play text-gray-400"></i> Google Play <i class="fa-solid fa-circle-xmark text-red-400 text-xs"></i>
                     </span>
-                    <span class="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 text-gray-700 text-[10px] font-bold px-2.5 py-1.5 rounded">
-                        <i class="fa-solid fa-circle-xmark text-red-400 text-sm"></i> غير مربوط بـ GAME CENTER
+                    <span class="flex items-center gap-1 text-[11px] font-bold text-gray-700">
+                        <i class="fa-brands fa-apple text-gray-400"></i> Game Center <i class="fa-solid fa-circle-xmark text-red-400 text-xs"></i>
                     </span>
                 </div>
 
-                <p class="text-[10px] font-bold text-gray-400 mb-3"><i class="fa-regular fa-calendar text-gray-400 mr-1"></i> تاريخ الإضافة: <span id="addedDate"></span></p>
-
                 <h2 id="accTitle" class="text-sm font-bold text-gray-900 leading-relaxed mb-4">جاري التحميل...</h2>
                 
-                <div class="flex items-center justify-between bg-gray-50 rounded-xl p-3 border border-gray-100 mb-3">
+                <div class="flex items-center justify-between bg-gray-50 rounded-xl p-3 border border-gray-100 mb-2">
                     <div class="text-center w-1/2 border-l border-gray-200">
                         <p class="text-[10px] text-gray-500 mb-0.5">سعر البنك</p>
                         <p id="baseBankPrice" class="font-bold text-sm text-gray-900">0 MAD</p>
@@ -83,11 +73,8 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center pt-3 border-t border-gray-100 mt-1">
-                    <div class="text-xs font-bold text-gray-500">
-                        <span class="text-orange-500" id="viewsCount">80</span> شخص نقر على هذا الحساب
-                    </div>
-                </div>
+                <p class="text-[10px] font-bold text-gray-400 text-center mb-3"><i class="fa-regular fa-calendar text-gray-400 mr-1"></i> تاريخ إضافة الحساب: <span id="addedDate"></span></p>
+
             </div>
         </div>
 
@@ -110,11 +97,13 @@
                                 <span class="text-sm font-bold text-gray-900">تحويل بنكي</span>
                                 <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-7%</span>
                             </div>
-                            <div class="flex items-center gap-1.5 mt-1.5">
-                                <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-3 object-contain rounded border border-gray-200 bg-white">
-                                <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" class="h-3 object-contain rounded border border-gray-200 bg-white">
-                                <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" class="h-3 object-contain rounded border border-gray-200 bg-white">
-                                <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" class="h-3 object-contain rounded border border-gray-200 bg-white">
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-3 object-contain">
+                                <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" class="h-3 object-contain">
+                                <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" class="h-3 object-contain">
+                                <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" class="h-3 object-contain">
+                                <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" class="h-3 object-contain">
+                                <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-1 rounded border border-blue-100">بنك آخر</span>
                             </div>
                         </div>
                     </div>
@@ -163,7 +152,7 @@
                                 <span class="text-sm font-bold text-gray-900">وكالة Cash Plus</span>
                                 <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-4%</span>
                             </div>
-                            <div class="text-[9px] text-gray-500 mt-1">الإرسال نقداً من أي وكالة</div>
+                            <div class="text-[9px] text-gray-500 mt-1">الإرسال نقداً من أي وكالة بالاسم</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
@@ -187,7 +176,7 @@
                                 <span class="text-sm font-bold text-gray-900">تعبئة إنوي (*9)</span>
                                 <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-4%</span>
                             </div>
-                            <div class="text-[9px] text-gray-500 mt-1">الدفع عبر رموز التعبئة</div>
+                            <div class="text-[9px] text-gray-500 mt-1">إدخال رموز التعبئة مباشرة</div>
                         </div>
                     </div>
                     <div class="text-left flex flex-col items-end">
@@ -258,10 +247,8 @@
         const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
         const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
 
-        const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
         document.getElementById('addedDate').innerText = new Date().toLocaleDateString('ar-MA', dateOptions);
-
-        document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
 
         let finalBinanceUsd = 0;
 
@@ -287,7 +274,6 @@
             renderPriceBox('box-cashplus', pBank, newCashPlus, 'MAD');
             renderPriceBox('box-inwi', pInwi, newInwi, 'MAD');
             renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); 
-
         } else {
             window.location.href = 'index.html';
         }
@@ -341,7 +327,7 @@
                 btn.innerHTML = originalHTML;
                 btn.className = originalClass;
 
-                if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance") {
+                if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance" || method === "تعبئة إنوي") {
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
                     const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${priceTextForWa}\n\nواش متوفر باش ندفع دابا؟`;
