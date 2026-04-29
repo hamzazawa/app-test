@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
-        .filter-btn { transition: all 0.2s ease-in-out; }
-        .filter-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
         /* إخفاء شريط التمرير */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
@@ -40,11 +38,11 @@
     <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow">
         
         <div class="flex justify-center mb-8">
-            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm">
-                <button onclick="filterAccounts('all', this)" class="filter-btn active flex-1 py-3 text-sm font-bold border-l border-gray-200">الكل</button>
-                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200">أقل من 100</button>
-                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200">100 - 300</button>
-                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50">+300 درهم</button>
+            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm" id="filterContainer">
+                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors">الكل</button>
+                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors">أقل من 100</button>
+                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors">100 - 300</button>
+                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors">+300 درهم</button>
             </div>
         </div>
 
@@ -64,12 +62,10 @@
     </main>
 
     <script>
-        // رابط قاعدة البيانات الخاص بك
         const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
         
-        let allAccountsData = {}; // تخزين البيانات محلياً للفلترة السريعة
+        let allAccountsData = {}; 
 
-        // 1. جلب البيانات من Firebase
         async function fetchAccounts() {
             try {
                 const response = await fetch(FIREBASE_URL);
@@ -79,7 +75,7 @@
                     allAccountsData = data;
                     document.getElementById('loadingState').classList.add('hidden');
                     document.getElementById('accountsGrid').classList.remove('hidden');
-                    renderAccounts('all'); // عرض الكل كبداية
+                    renderAccounts('all'); 
                 }
             } catch (error) {
                 console.error("خطأ في جلب البيانات: ", error);
@@ -87,56 +83,76 @@
             }
         }
 
-        // 2. عرض الحسابات بناءً على الفلتر
         function renderAccounts(filterType) {
             const grid = document.getElementById('accountsGrid');
             const emptyState = document.getElementById('emptyState');
-            grid.innerHTML = ''; // تفريغ الشبكة
+            grid.innerHTML = ''; 
             let hasItems = false;
 
-            for (const [id, acc] of Object.entries(allAccountsData)) {
-                if (!acc) continue; // تخطي القيم الفارغة
+            // تحويل البيانات إلى مصفوفة للتمكن من الترتيب
+            let accountsArray = Object.entries(allAccountsData).map(([id, acc]) => ({ id, ...acc }));
 
-                // جلب القيم من قاعدة البيانات (إذا لم يكن price_web موجوداً، نستخدم bank_price كاحتياط)
+            // ترتيب الحسابات (من الأحدث إلى الأقدم) حسب حقل timestamp
+            accountsArray.sort((a, b) => {
+                let timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                let timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                return timeB - timeA; // الأحدث يظهر أولاً
+            });
+
+            // جلب تاريخ اليوم لمعرفة الحسابات "الجديدة"
+            const todayStr = new Date().toDateString();
+
+            for (const acc of accountsArray) {
+                if (!acc) continue;
+
                 let priceWeb = parseFloat(acc.price_web) || parseFloat(acc.bank_price) || 0;
                 let originalBankPrice = parseFloat(acc.bank_price) || priceWeb;
                 
-                // تطبيق الفلترة حسب السعر المخفض (price_web)
+                // الفلترة
                 if (filterType === 'under100' && priceWeb >= 100) continue;
                 if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
                 if (filterType === 'over300' && priceWeb <= 300) continue;
 
                 hasItems = true;
 
-                // العمليات الحسابية
-                // 1. حساب تعبئة إنوي بزيادة 25% على السعر المخفض
                 let inwiPrice = Math.round(priceWeb + (priceWeb * 0.25));
-                
-                // 2. حساب نسبة التخفيض
                 let discountPct = 0;
                 if (originalBankPrice > priceWeb) {
                     discountPct = Math.round(((originalBankPrice - priceWeb) / originalBankPrice) * 100);
                 }
 
-                // تجهيز رابط الدفع (نرسل priceWeb كبنك و inwiPrice كإنوي)
-                const checkoutUrl = `checkout.html?id=${id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${priceWeb}&inwi=${inwiPrice}`;
-                
-                // تصميم نسبة التخفيض (تظهر فقط إذا كان هناك تخفيض)
-                let discountBadge = '';
-                if (discountPct > 0) {
-                    discountBadge = `<div class="absolute top-3 right-3 bg-red-500 text-white text-[11px] font-black px-2 py-1 rounded-md shadow-md z-10">-${discountPct}%</div>`;
+                // التحقق مما إذا كان الحساب جديداً (أضيف اليوم)
+                let isNew = false;
+                if (acc.timestamp) {
+                    const accDate = new Date(acc.timestamp);
+                    if (accDate.toDateString() === todayStr) {
+                        isNew = true;
+                    }
                 }
 
-                // تصميم السعر الأصلي المشطوب (يظهر فقط إذا كان هناك تخفيض)
+                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${priceWeb}&inwi=${inwiPrice}`;
+                
+                // بطاقة التخفيض (تم نقلها لليسار left-3)
+                let discountBadge = '';
+                if (discountPct > 0) {
+                    discountBadge = `<div class="absolute top-3 left-3 bg-red-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-md z-10">-${discountPct}%</div>`;
+                }
+
+                // بطاقة "جديد" (تظهر على اليمين right-3)
+                let newBadge = '';
+                if (isNew) {
+                    newBadge = `<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow-md z-10 animate-pulse"><i class="fa-solid fa-sparkles mr-1 text-[9px]"></i>جديد</div>`;
+                }
+
                 let oldPriceHtml = '';
                 if (discountPct > 0) {
                     oldPriceHtml = `<del class="text-[10px] text-gray-400 block -mb-1">${originalBankPrice} MAD</del>`;
                 }
 
-                // إضافة البطاقة للشبكة
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     ${discountBadge}
+                    ${newBadge}
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
                         <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
@@ -162,7 +178,6 @@
                 </div>`;
             }
 
-            // إظهار وإخفاء رسالة "لا توجد حسابات"
             if (!hasItems) {
                 emptyState.classList.remove('hidden');
                 emptyState.classList.add('flex');
@@ -172,29 +187,25 @@
             }
         }
 
-        // 3. التحكم في أزرار الفلترة
+        // تم إصلاح دالة الفلترة لتعمل بكلاسات Tailwind فقط لتجنب الضبابية
         function filterAccounts(filterType, btnElement) {
-            // إزالة اللون من كل الأزرار
             const buttons = document.querySelectorAll('.filter-btn');
+            
+            // إرجاع جميع الأزرار للحالة الرمادية العادية
             buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-                btn.classList.add('text-gray-500');
+                btn.className = "filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors";
             });
             
-            // إضافة اللون للزر المضغوط
-            btnElement.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-            btnElement.classList.remove('text-gray-500');
+            // جعل الزر المضغوط أزرق
+            btnElement.className = "filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors";
 
-            // تحديث العرض
             renderAccounts(filterType);
         }
 
-        // 4. عداد نشطين عشوائي (لمسة تسويقية)
         setInterval(() => {
             document.getElementById('activeCount').innerText = Math.floor(Math.random() * (45 - 12 + 1)) + 12;
         }, 8000);
 
-        // تشغيل الجلب عند فتح الصفحة
         window.onload = fetchAccounts;
 
     </script>
