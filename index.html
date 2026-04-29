@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
-        /* إخفاء شريط التمرير */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -38,11 +37,11 @@
     <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow">
         
         <div class="flex justify-center mb-8">
-            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm" id="filterContainer">
-                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors">الكل</button>
-                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors">أقل من 100</button>
-                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors">100 - 300</button>
-                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors">+300 درهم</button>
+            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm text-center">
+                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center">الكل</button>
+                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">أقل من 100</button>
+                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">100 - 300</button>
+                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors flex justify-center items-center">+300 درهم</button>
             </div>
         </div>
 
@@ -51,8 +50,7 @@
             <p class="text-sm font-bold text-gray-500">جاري جلب الحسابات المتاحة...</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden" id="accountsGrid">
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden" id="accountsGrid"></div>
 
         <div id="emptyState" class="hidden flex-col items-center justify-center py-10">
             <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
@@ -63,8 +61,18 @@
 
     <script>
         const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
-        
         let allAccountsData = {}; 
+
+        // دالة تحويل التاريخ (DD-MM-YYYY) إلى قيمة رقمية للترتيب
+        function parseDateString(dateStr) {
+            if (!dateStr) return 0;
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                // Year, Month (0-based), Day
+                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+            }
+            return 0;
+        }
 
         async function fetchAccounts() {
             try {
@@ -78,8 +86,8 @@
                     renderAccounts('all'); 
                 }
             } catch (error) {
-                console.error("خطأ في جلب البيانات: ", error);
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم.</p>`;
+                console.error("خطأ: ", error);
+                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال.</p>`;
             }
         }
 
@@ -89,69 +97,46 @@
             grid.innerHTML = ''; 
             let hasItems = false;
 
-            // تحويل البيانات إلى مصفوفة للتمكن من الترتيب
-            let accountsArray = Object.entries(allAccountsData).map(([id, acc]) => ({ id, ...acc }));
+            let accountsArray = [];
+            for (const [id, acc] of Object.entries(allAccountsData)) {
+                // استثناء قائمة البوت أو أي حساب بدون عنوان
+                if (id === "bot_menu" || !acc.title) continue; 
+                accountsArray.push({ id, ...acc });
+            }
 
-            // ترتيب الحسابات (من الأحدث إلى الأقدم) حسب حقل timestamp
-            accountsArray.sort((a, b) => {
-                let timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-                let timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-                return timeB - timeA; // الأحدث يظهر أولاً
-            });
+            // الترتيب من الأحدث إلى الأقدم
+            accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
 
-            // جلب تاريخ اليوم لمعرفة الحسابات "الجديدة"
-            const todayStr = new Date().toDateString();
+            // جلب تاريخ اليوم بصيغة DD-MM-YYYY للمقارنة
+            const today = new Date();
+            const todayStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
 
             for (const acc of accountsArray) {
-                if (!acc) continue;
-
-                let priceWeb = parseFloat(acc.price_web) || parseFloat(acc.bank_price) || 0;
-                let originalBankPrice = parseFloat(acc.bank_price) || priceWeb;
+                // الأسعار من قاعدة البيانات
+                let priceWeb = parseFloat(acc.price_web) || 0;
+                let bankPrice = parseFloat(acc.bank_price) || priceWeb;
                 
-                // الفلترة
+                // الفلترة تتم على السعر الأصلي الذي يدفعه الزبون (price_web)
                 if (filterType === 'under100' && priceWeb >= 100) continue;
                 if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
                 if (filterType === 'over300' && priceWeb <= 300) continue;
 
                 hasItems = true;
 
-                let inwiPrice = Math.round(priceWeb + (priceWeb * 0.25));
-                let discountPct = 0;
-                if (originalBankPrice > priceWeb) {
-                    discountPct = Math.round(((originalBankPrice - priceWeb) / originalBankPrice) * 100);
-                }
+                // سعر تعبئة إنوي (25% زيادة على السعر المخفض)
+                let inwiPrice = Math.round(priceWeb * 1.25);
 
-                // التحقق مما إذا كان الحساب جديداً (أضيف اليوم)
-                let isNew = false;
-                if (acc.timestamp) {
-                    const accDate = new Date(acc.timestamp);
-                    if (accDate.toDateString() === todayStr) {
-                        isNew = true;
-                    }
-                }
+                // هل الحساب مضاف اليوم؟
+                let isNew = (acc.timestamp === todayStr);
 
-                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${priceWeb}&inwi=${inwiPrice}`;
+                // رابط الدفع يرسل الأسعار وحالة الروابط
+                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}`;
                 
-                // بطاقة التخفيض (تم نقلها لليسار left-3)
-                let discountBadge = '';
-                if (discountPct > 0) {
-                    discountBadge = `<div class="absolute top-3 left-3 bg-red-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-md z-10">-${discountPct}%</div>`;
-                }
-
-                // بطاقة "جديد" (تظهر على اليمين right-3)
-                let newBadge = '';
-                if (isNew) {
-                    newBadge = `<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow-md z-10 animate-pulse"><i class="fa-solid fa-sparkles mr-1 text-[9px]"></i>جديد</div>`;
-                }
-
-                let oldPriceHtml = '';
-                if (discountPct > 0) {
-                    oldPriceHtml = `<del class="text-[10px] text-gray-400 block -mb-1">${originalBankPrice} MAD</del>`;
-                }
+                let newBadge = isNew ? `<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow-md z-10 animate-pulse"><i class="fa-solid fa-sparkles mr-1 text-[9px]"></i>جديد</div>` : '';
+                let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
-                    ${discountBadge}
                     ${newBadge}
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
                         <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -160,7 +145,7 @@
                         <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
                         <div>
                             <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
-                                <span class="text-blue-700 text-xs font-bold">سعر البنك:</span>
+                                <span class="text-blue-700 text-xs font-bold">السعر:</span>
                                 <div class="text-left">
                                     ${oldPriceHtml}
                                     <span class="font-black text-blue-700 text-sm">${priceWeb} MAD</span>
@@ -171,7 +156,7 @@
                                 <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
                             </div>
                             <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
-                                شراء الحساب
+                                إتمام الطلب
                             </a>
                         </div>
                     </div>
@@ -187,18 +172,12 @@
             }
         }
 
-        // تم إصلاح دالة الفلترة لتعمل بكلاسات Tailwind فقط لتجنب الضبابية
         function filterAccounts(filterType, btnElement) {
             const buttons = document.querySelectorAll('.filter-btn');
-            
-            // إرجاع جميع الأزرار للحالة الرمادية العادية
             buttons.forEach(btn => {
-                btn.className = "filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors";
+                btn.className = "filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center";
             });
-            
-            // جعل الزر المضغوط أزرق
-            btnElement.className = "filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors";
-
+            btnElement.className = "filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center";
             renderAccounts(filterType);
         }
 
