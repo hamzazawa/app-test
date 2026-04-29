@@ -9,91 +9,194 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .price-bar button { transition: all 0.2s ease-in-out; }
-        .price-bar button.active { background-color: #2563eb; color: white; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
+        .filter-btn { transition: all 0.2s ease-in-out; }
+        .filter-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        /* إخفاء شريط التمرير */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f3f4f6; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased flex flex-col min-h-screen">
 
-    <header class="bg-[#1e293b] border-b border-slate-800 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3 max-w-5xl flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-gamepad text-blue-500 text-2xl"></i>
-                <h1 class="text-xl font-black text-white tracking-wider">EPEC STORE</h1>
+                <i class="fa-solid fa-gamepad text-blue-600 text-2xl"></i>
+                <h1 class="text-xl font-black text-gray-900 tracking-wider">EPEC STORE</h1>
             </div>
             
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+            <div class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
                 <span class="relative flex h-2.5 w-2.5">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                 </span>
-                <span class="text-xs font-bold text-slate-300"><span id="activeCount">16</span> نشط</span>
+                <span class="text-xs font-bold text-gray-600"><span id="activeCount">16</span> نشط الآن</span>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow">
         
         <div class="flex justify-center mb-8">
-            <div class="price-bar flex bg-slate-800 rounded-xl overflow-hidden border border-slate-700 w-full max-w-2xl shadow-lg">
-                <button class="flex-1 py-3 text-sm font-bold active border-l border-slate-700">الكل</button>
-                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700 border-l border-slate-700">أقل من 100</button>
-                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700 border-l border-slate-700">100 - 300</button>
-                <button class="flex-1 py-3 text-sm font-bold text-slate-400 hover:bg-slate-700">+300 درهم</button>
+            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm">
+                <button onclick="filterAccounts('all', this)" class="filter-btn active flex-1 py-3 text-sm font-bold border-l border-gray-200">الكل</button>
+                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200">أقل من 100</button>
+                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200">100 - 300</button>
+                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50">+300 درهم</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="accountsGrid">
+        <div id="loadingState" class="flex flex-col items-center justify-center py-10">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-3"></i>
+            <p class="text-sm font-bold text-gray-500">جاري جلب الحسابات المتاحة...</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden" id="accountsGrid">
             </div>
+
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-10">
+            <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
+            <p class="text-sm font-bold text-gray-500">لا توجد حسابات في هذا النطاق السعري حالياً.</p>
+        </div>
 
     </main>
 
     <script>
-        // داتا الحسابات (نفس التي أرسلتها لي)
-        const accountsData = {
-            "7UaDhCdeyj": { bank_price: "80", inwi_price: "100", img: "https://pbs.twimg.com/media/HFzZwLQWIAAcoRU?format=jpg&name=900x900", title: "كونط بثمن ناقص و عامر فيه شي 250 لاعب" },
-            "NDE4rFUoKd": { bank_price: "190", inwi_price: "240", img: "https://pbs.twimg.com/media/HEruJ93bIAAxSMQ?format=jpg&name=900x900", title: "كونط ديال تقصار 100% فيه اقود نسخة ديال مبابي و ريبيري جديد" },
-            "S5Ordx0ZtW": { bank_price: "420", inwi_price: "500", img: "https://pbs.twimg.com/media/HE01OH5bsAAZWHn?format=jpg&name=900x900", title: "كونط عامر فيه احسن رأس حربة + أحسن بليتز دفاع" },
-            "YcmoBn1QF9": { bank_price: "150", inwi_price: "180", img: "https://pbs.twimg.com/media/HFpUs1jXwAAg8Mx?format=jpg&name=900x900", title: "القناص باتيستوتا و مولر و ديونغ و المدرب" },
-            "YpK4Qcy70M": { bank_price: "250", inwi_price: "290", img: "https://pbs.twimg.com/media/HF3Hjp1WYAACIc4?format=jpg&name=900x900", title: "فيه 2 بليتز فيا و لمين يامال و الوسط مقود" },
-            "a3qpJjKkcY": { bank_price: "250", inwi_price: "310", img: "https://pbs.twimg.com/media/HFuux_KbYAAjykQ?format=jpg&name=900x900", title: "كونط عامر مدربين فيه صون من أحسن بليتزلات" },
-            "acc15": { bank_price: "120", inwi_price: "130", img: "https://files.catbox.moe/3ur4bb.jpg", title: "صحاب بيرلو ها هو" }
-            // يمكنك إضافة الباقي بنفس النمط
-        };
-
-        const grid = document.getElementById('accountsGrid');
+        // رابط قاعدة البيانات الخاص بك
+        const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
         
-        for (const [id, acc] of Object.entries(accountsData)) {
-            // تجهيز الرابط لصفحة الدفع الجديدة مع إرسال البيانات
-            const checkoutUrl = `checkout.html?id=${id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${acc.bank_price}&inwi=${acc.inwi_price}`;
-            
-            grid.innerHTML += `
-            <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500 transition duration-300 flex flex-col">
-                <img src="${acc.img}" class="w-full h-48 object-cover border-b border-slate-700">
-                <div class="p-4 flex-grow flex flex-col justify-between">
-                    <h3 class="font-bold text-sm mb-4 text-slate-200">${acc.title}</h3>
-                    <div>
-                        <div class="flex justify-between items-center bg-slate-900/50 p-2.5 rounded-lg mb-2">
-                            <span class="text-slate-400 text-xs">البنك / كاش بليس:</span>
-                            <span class="font-bold text-blue-400 text-sm">${acc.bank_price} MAD</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-slate-900/50 p-2.5 rounded-lg mb-4">
-                            <span class="text-slate-400 text-xs">تعبئة إنوي:</span>
-                            <span class="font-bold text-purple-400 text-sm">${acc.inwi_price} MAD</span>
-                        </div>
-                        <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-lg transition text-sm shadow-lg shadow-blue-500/20">
-                            شراء الحساب
-                        </a>
-                    </div>
-                </div>
-            </div>`;
+        let allAccountsData = {}; // تخزين البيانات محلياً للفلترة السريعة
+
+        // 1. جلب البيانات من Firebase
+        async function fetchAccounts() {
+            try {
+                const response = await fetch(FIREBASE_URL);
+                const data = await response.json();
+                
+                if (data) {
+                    allAccountsData = data;
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('accountsGrid').classList.remove('hidden');
+                    renderAccounts('all'); // عرض الكل كبداية
+                }
+            } catch (error) {
+                console.error("خطأ في جلب البيانات: ", error);
+                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم.</p>`;
+            }
         }
 
-        // عداد عشوائي للنشطين
+        // 2. عرض الحسابات بناءً على الفلتر
+        function renderAccounts(filterType) {
+            const grid = document.getElementById('accountsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = ''; // تفريغ الشبكة
+            let hasItems = false;
+
+            for (const [id, acc] of Object.entries(allAccountsData)) {
+                if (!acc) continue; // تخطي القيم الفارغة
+
+                // جلب القيم من قاعدة البيانات (إذا لم يكن price_web موجوداً، نستخدم bank_price كاحتياط)
+                let priceWeb = parseFloat(acc.price_web) || parseFloat(acc.bank_price) || 0;
+                let originalBankPrice = parseFloat(acc.bank_price) || priceWeb;
+                
+                // تطبيق الفلترة حسب السعر المخفض (price_web)
+                if (filterType === 'under100' && priceWeb >= 100) continue;
+                if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
+                if (filterType === 'over300' && priceWeb <= 300) continue;
+
+                hasItems = true;
+
+                // العمليات الحسابية
+                // 1. حساب تعبئة إنوي بزيادة 25% على السعر المخفض
+                let inwiPrice = Math.round(priceWeb + (priceWeb * 0.25));
+                
+                // 2. حساب نسبة التخفيض
+                let discountPct = 0;
+                if (originalBankPrice > priceWeb) {
+                    discountPct = Math.round(((originalBankPrice - priceWeb) / originalBankPrice) * 100);
+                }
+
+                // تجهيز رابط الدفع (نرسل priceWeb كبنك و inwiPrice كإنوي)
+                const checkoutUrl = `checkout.html?id=${id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${priceWeb}&inwi=${inwiPrice}`;
+                
+                // تصميم نسبة التخفيض (تظهر فقط إذا كان هناك تخفيض)
+                let discountBadge = '';
+                if (discountPct > 0) {
+                    discountBadge = `<div class="absolute top-3 right-3 bg-red-500 text-white text-[11px] font-black px-2 py-1 rounded-md shadow-md z-10">-${discountPct}%</div>`;
+                }
+
+                // تصميم السعر الأصلي المشطوب (يظهر فقط إذا كان هناك تخفيض)
+                let oldPriceHtml = '';
+                if (discountPct > 0) {
+                    oldPriceHtml = `<del class="text-[10px] text-gray-400 block -mb-1">${originalBankPrice} MAD</del>`;
+                }
+
+                // إضافة البطاقة للشبكة
+                grid.innerHTML += `
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
+                    ${discountBadge}
+                    <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
+                        <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col justify-between">
+                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
+                        <div>
+                            <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
+                                <span class="text-blue-700 text-xs font-bold">سعر البنك:</span>
+                                <div class="text-left">
+                                    ${oldPriceHtml}
+                                    <span class="font-black text-blue-700 text-sm">${priceWeb} MAD</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center bg-purple-50 p-2.5 rounded-lg mb-4 border border-purple-100">
+                                <span class="text-purple-700 text-xs font-bold">تعبئة إنوي:</span>
+                                <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
+                            </div>
+                            <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
+                                شراء الحساب
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // إظهار وإخفاء رسالة "لا توجد حسابات"
+            if (!hasItems) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+        }
+
+        // 3. التحكم في أزرار الفلترة
+        function filterAccounts(filterType, btnElement) {
+            // إزالة اللون من كل الأزرار
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                btn.classList.add('text-gray-500');
+            });
+            
+            // إضافة اللون للزر المضغوط
+            btnElement.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+            btnElement.classList.remove('text-gray-500');
+
+            // تحديث العرض
+            renderAccounts(filterType);
+        }
+
+        // 4. عداد نشطين عشوائي (لمسة تسويقية)
         setInterval(() => {
             document.getElementById('activeCount').innerText = Math.floor(Math.random() * (45 - 12 + 1)) + 12;
-        }, 6000);
+        }, 8000);
+
+        // تشغيل الجلب عند فتح الصفحة
+        window.onload = fetchAccounts;
+
     </script>
 </body>
 </html>
