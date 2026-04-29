@@ -63,11 +63,12 @@
         const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
 
+        // تم إصلاح الخطأ المطبعي هنا
         function parseDateString(dateStr) {
             if (!dateStr) return 0;
             const parts = dateStr.split('-');
             if (parts.length === 3) {
-                return new Date(parts[2], parts[part[1]] - 1, parts[0]).getTime();
+                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
             }
             return 0;
         }
@@ -85,7 +86,9 @@
                 }
             } catch (error) {
                 console.error("خطأ: ", error);
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال.</p>`;
+                const loadingElement = document.getElementById('loadingState');
+                loadingElement.classList.remove('hidden');
+                loadingElement.innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال الخادم.</p>`;
             }
         }
 
@@ -101,7 +104,7 @@
                 accountsArray.push({ id, ...acc });
             }
 
-            // الترتيب من الأحدث إلى الأقدم
+            // الترتيب من الأحدث إلى الأقدم استناداً للتاريخ
             accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
 
             const today = new Date();
@@ -126,7 +129,6 @@
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
                 // تصميم "جديد" المائل (Diagonal Ribbon) الأنيق والملاصق للحافة اليسرى العلوية
-                // تم استخدام overflow-hidden على حاوية الصورة لقص الشريط ليبقى متناسقاً
                 let newBadgeRibbon = isNew ? `
                 <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-6 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg">
                     جديد
@@ -135,7 +137,6 @@
                 
                 let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
-                // تم حذف التخفيض والتاريخ من الواجهة تماماً، وإضافة شارة جديد المائلة
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
