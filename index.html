@@ -34,14 +34,14 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 max-w-5xl flex-grow">
+    <main class="container mx-auto px-4 py-4 max-w-5xl flex-grow">
         
-        <div class="flex justify-center mb-8">
+        <div class="flex justify-center mb-4 mt-2">
             <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm text-center">
-                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center">الكل</button>
-                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">أقل من 100</button>
-                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">100 - 300</button>
-                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors flex justify-center items-center">+300 درهم</button>
+                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center">الكل</button>
+                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">أقل من 100</button>
+                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">100 - 300</button>
+                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors flex justify-center items-center">+300 درهم</button>
             </div>
         </div>
 
@@ -117,41 +117,27 @@
 
                 hasItems = true;
 
-                // حساب سعر إنوي (زيادة 25% ثم تقريب السعر لأقرب مضاعف لـ 5)
+                // حساب سعر إنوي وتعديله
                 let rawInwi = priceWeb * 1.25;
                 let inwiPrice = Math.round(rawInwi / 5) * 5; 
 
                 let isNew = (acc.timestamp === todayStr);
 
-                // تمرير تاريخ الحساب الفعلي في الرابط
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
-                // تصميم علامة "جديد" (الحافة اليمنى العلوية تماماً، لون أزرق فاتح)
-                let newBadge = isNew ? `<div class="absolute top-0 right-0 bg-blue-50 text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-bl-xl border-b border-l border-blue-100 shadow-sm z-10">جديد</div>` : '';
+                // تصميم "جديد" المدمج مع العنوان (أنيق ومخفي عن الصورة)
+                let newBadge = isNew ? `<span class="inline-block align-middle bg-blue-50 text-blue-600 border border-blue-200 text-[9px] font-black px-1.5 py-0.5 rounded ml-1.5 mb-0.5">جديد</span>` : '';
                 
-                let discountPct = 0;
-                if (bankPrice > priceWeb) {
-                    discountPct = Math.round(((bankPrice - priceWeb) / bankPrice) * 100);
-                }
-                
-                // تصميم علامة التخفيض (الحافة اليسرى العلوية تماماً)
-                let discountBadge = discountPct > 0 ? `<div class="absolute top-0 left-0 bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-br-xl border-b border-r border-red-600 shadow-sm z-10">-${discountPct}%</div>` : '';
-
                 let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
-                // طباعة التاريخ
-                let dateHtml = acc.timestamp ? `<div class="text-[10px] text-gray-400 mb-2 flex items-center gap-1"><i class="fa-regular fa-calendar"></i> تمت الإضافة: ${acc.timestamp.replace(/-/g, '/')}</div>` : '';
-
+                // تم إزالة كل ما يغطي الصورة
                 grid.innerHTML += `
-                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative">
-                    ${newBadge}
-                    ${discountBadge}
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
-                        <img src="${acc.img}" class="w-full h-full object-cover">
+                        <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
-                        <h3 class="font-bold text-sm mb-2 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
-                        ${dateHtml}
+                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${newBadge}${acc.title}</h3>
                         <div>
                             <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
                                 <span class="text-blue-700 text-xs font-bold">السعر:</span>
@@ -184,9 +170,9 @@
         function filterAccounts(filterType, btnElement) {
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
-                btn.className = "filter-btn flex-1 py-3 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center";
+                btn.className = "filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center";
             });
-            btnElement.className = "filter-btn flex-1 py-3 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center";
+            btnElement.className = "filter-btn flex-1 py-2.5 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center";
             renderAccounts(filterType);
         }
 
