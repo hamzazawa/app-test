@@ -63,12 +63,10 @@
         const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
 
-        // دالة تحويل التاريخ (DD-MM-YYYY) إلى قيمة رقمية للترتيب
         function parseDateString(dateStr) {
             if (!dateStr) return 0;
             const parts = dateStr.split('-');
             if (parts.length === 3) {
-                // Year, Month (0-based), Day
                 return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
             }
             return 0;
@@ -99,7 +97,6 @@
 
             let accountsArray = [];
             for (const [id, acc] of Object.entries(allAccountsData)) {
-                // استثناء قائمة البوت أو أي حساب بدون عنوان
                 if (id === "bot_menu" || !acc.title) continue; 
                 accountsArray.push({ id, ...acc });
             }
@@ -107,42 +104,54 @@
             // الترتيب من الأحدث إلى الأقدم
             accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
 
-            // جلب تاريخ اليوم بصيغة DD-MM-YYYY للمقارنة
             const today = new Date();
             const todayStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
 
             for (const acc of accountsArray) {
-                // الأسعار من قاعدة البيانات
                 let priceWeb = parseFloat(acc.price_web) || 0;
                 let bankPrice = parseFloat(acc.bank_price) || priceWeb;
                 
-                // الفلترة تتم على السعر الأصلي الذي يدفعه الزبون (price_web)
                 if (filterType === 'under100' && priceWeb >= 100) continue;
                 if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
                 if (filterType === 'over300' && priceWeb <= 300) continue;
 
                 hasItems = true;
 
-                // سعر تعبئة إنوي (25% زيادة على السعر المخفض)
-                let inwiPrice = Math.round(priceWeb * 1.25);
+                // حساب سعر إنوي (زيادة 25% ثم تقريب السعر لأقرب مضاعف لـ 5)
+                let rawInwi = priceWeb * 1.25;
+                let inwiPrice = Math.round(rawInwi / 5) * 5; 
 
-                // هل الحساب مضاف اليوم؟
                 let isNew = (acc.timestamp === todayStr);
 
-                // رابط الدفع يرسل الأسعار وحالة الروابط
-                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}`;
+                // تمرير تاريخ الحساب الفعلي في الرابط
+                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
-                let newBadge = isNew ? `<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow-md z-10 animate-pulse"><i class="fa-solid fa-sparkles mr-1 text-[9px]"></i>جديد</div>` : '';
+                // تصميم علامة "جديد" (الحافة اليمنى العلوية تماماً، لون أزرق فاتح)
+                let newBadge = isNew ? `<div class="absolute top-0 right-0 bg-blue-50 text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-bl-xl border-b border-l border-blue-100 shadow-sm z-10">جديد</div>` : '';
+                
+                let discountPct = 0;
+                if (bankPrice > priceWeb) {
+                    discountPct = Math.round(((bankPrice - priceWeb) / bankPrice) * 100);
+                }
+                
+                // تصميم علامة التخفيض (الحافة اليسرى العلوية تماماً)
+                let discountBadge = discountPct > 0 ? `<div class="absolute top-0 left-0 bg-red-500 text-white text-[11px] font-black px-3 py-1.5 rounded-br-xl border-b border-r border-red-600 shadow-sm z-10">-${discountPct}%</div>` : '';
+
                 let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
+                // طباعة التاريخ
+                let dateHtml = acc.timestamp ? `<div class="text-[10px] text-gray-400 mb-2 flex items-center gap-1"><i class="fa-regular fa-calendar"></i> تمت الإضافة: ${acc.timestamp.replace(/-/g, '/')}</div>` : '';
+
                 grid.innerHTML += `
-                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative">
                     ${newBadge}
+                    ${discountBadge}
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
-                        <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="${acc.img}" class="w-full h-full object-cover">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
-                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
+                        <h3 class="font-bold text-sm mb-2 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
+                        ${dateHtml}
                         <div>
                             <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
                                 <span class="text-blue-700 text-xs font-bold">السعر:</span>
@@ -156,7 +165,7 @@
                                 <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
                             </div>
                             <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
-                                إتمام الطلب
+                                شراء الحساب
                             </a>
                         </div>
                     </div>
