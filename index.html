@@ -67,7 +67,7 @@
             if (!dateStr) return 0;
             const parts = dateStr.split('-');
             if (parts.length === 3) {
-                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+                return new Date(parts[2], parts[part[1]] - 1, parts[0]).getTime();
             }
             return 0;
         }
@@ -125,19 +125,25 @@
 
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
-                // تصميم "جديد" المدمج مع العنوان (أنيق ومخفي عن الصورة)
-                let newBadge = isNew ? `<span class="inline-block align-middle bg-blue-50 text-blue-600 border border-blue-200 text-[9px] font-black px-1.5 py-0.5 rounded ml-1.5 mb-0.5">جديد</span>` : '';
+                // تصميم "جديد" المائل (Diagonal Ribbon) الأنيق والملاصق للحافة اليسرى العلوية
+                // تم استخدام overflow-hidden على حاوية الصورة لقص الشريط ليبقى متناسقاً
+                let newBadgeRibbon = isNew ? `
+                <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-6 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg">
+                    جديد
+                </div>
+                ` : '';
                 
                 let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
-                // تم إزالة كل ما يغطي الصورة
+                // تم حذف التخفيض والتاريخ من الواجهة تماماً، وإضافة شارة جديد المائلة
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
-                        <img src="${acc.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        ${newBadgeRibbon}
+                        <img src="${acc.img}" class="w-full h-full object-cover">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
-                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${newBadge}${acc.title}</h3>
+                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
                         <div>
                             <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
                                 <span class="text-blue-700 text-xs font-bold">السعر:</span>
