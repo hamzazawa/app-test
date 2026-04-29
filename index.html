@@ -6,13 +6,24 @@
     <title>EPEC STORE - شحن وبيع حسابات eFootball</title>
     <meta name="description" content="متجر EPEC STORE الأفضل لبيع وشحن حسابات eFootball.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        /* انيميشن Skeleton للصور */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -63,7 +74,6 @@
         const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
 
-        // تم إصلاح الخطأ المطبعي هنا
         function parseDateString(dateStr) {
             if (!dateStr) return 0;
             const parts = dateStr.split('-');
@@ -88,7 +98,7 @@
                 console.error("خطأ: ", error);
                 const loadingElement = document.getElementById('loadingState');
                 loadingElement.classList.remove('hidden');
-                loadingElement.innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال الخادم.</p>`;
+                loadingElement.innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم.</p>`;
             }
         }
 
@@ -104,11 +114,9 @@
                 accountsArray.push({ id, ...acc });
             }
 
-            // الترتيب من الأحدث إلى الأقدم استناداً للتاريخ
             accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
 
-            const today = new Date();
-            const todayStr = String(today.getDate()).padStart(2, '0') + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + today.getFullYear();
+            const now = new Date();
 
             for (const acc of accountsArray) {
                 let priceWeb = parseFloat(acc.price_web) || 0;
@@ -120,17 +128,23 @@
 
                 hasItems = true;
 
-                // حساب سعر إنوي وتعديله
                 let rawInwi = priceWeb * 1.25;
                 let inwiPrice = Math.round(rawInwi / 5) * 5; 
 
-                let isNew = (acc.timestamp === todayStr);
+                // منطق جديد: إظهار علامة جديد لمدة 3 أيام (72 ساعة)
+                let isNew = false;
+                if (acc.timestamp) {
+                    const accDate = parseDateString(acc.timestamp);
+                    const diffInDays = (now.getTime() - accDate) / (1000 * 60 * 60 * 24);
+                    if (diffInDays <= 3) {
+                        isNew = true;
+                    }
+                }
 
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
-                // تصميم "جديد" المائل (Diagonal Ribbon) الأنيق والملاصق للحافة اليسرى العلوية
                 let newBadgeRibbon = isNew ? `
-                <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-6 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg">
+                <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-7 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg uppercase tracking-widest">
                     جديد
                 </div>
                 ` : '';
@@ -141,7 +155,11 @@
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
                         ${newBadgeRibbon}
-                        <img src="${acc.img}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 skeleton"></div>
+                        <img src="${acc.img}" 
+                             onload="this.previousElementSibling.style.display='none'" 
+                             class="w-full h-full object-cover" 
+                             alt="account">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
                         <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
