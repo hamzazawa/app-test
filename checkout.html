@@ -12,13 +12,9 @@
         .payment-label input:checked + div { border-color: #3b82f6; background-color: #eff6ff; }
         .payment-label input:checked + div .check-circle { background-color: #3b82f6; border-color: #3b82f6; }
         .payment-label input:checked + div .check-circle i { opacity: 1; }
-        
-        /* إخفاء شريط التمرير العادي */
-        ::-webkit-scrollbar { width: 6px; height: 4px; }
+        ::-webkit-scrollbar { height: 4px; width: 4px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        
-        /* إخفاء شريط التمرير لشريط الروابط فقط ليبقى نظيفاً */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -64,11 +60,11 @@
                         </span>
                         <span class="text-gray-300 flex items-center">|</span>
                         <span class="flex items-center gap-1 text-[10px] font-bold text-gray-800 font-sans">
-                            Google Play <span class="text-red-500 font-black text-[9px]">NO</span>
+                            Google Play <span id="ggStatus" class="text-red-500 font-black text-[9px]"></span>
                         </span>
                         <span class="text-gray-300 flex items-center">|</span>
                         <span class="flex items-center gap-1 text-[10px] font-bold text-gray-800 font-sans">
-                            Game Center <span class="text-red-500 font-black text-[9px]">NO</span>
+                            Game Center <span id="iosStatus" class="text-red-500 font-black text-[9px]"></span>
                         </span>
                     </div>
                 </div>
@@ -86,17 +82,11 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-center pt-2 mt-1">
-                    <div class="text-[11px] font-bold text-gray-500">
-                        <span class="text-orange-500" id="viewsCount">80</span> شخص نقر على هذا الحساب
-                    </div>
-                </div>
             </div>
         </div>
 
         <div id="payment-section" class="flex items-center justify-between mb-4 px-1 scroll-mt-24">
             <h3 class="text-sm font-black text-gray-800">اختر طريقة الدفع</h3>
-            <span class="text-[10px] text-green-600 font-bold bg-green-100 px-2 py-1 rounded border border-green-200">تخفيضات حصرية</span>
         </div>
         
         <div class="space-y-3 mb-8">
@@ -111,7 +101,7 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-900">تحويل بنكي</span>
-                                <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-7%</span>
+                                <span id="bankBadge" class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200"></span>
                             </div>
                             <div class="flex items-center gap-1.5 mt-1.5">
                                 <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-3 object-contain">
@@ -136,13 +126,13 @@
                 <input type="radio" name="payment_method" value="Binance" class="hidden">
                 <div class="border border-gray-200 bg-white hover:bg-gray-50 rounded-xl p-3.5 transition flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[#F3BA2F]">
                             <img src="https://pbs.twimg.com/media/HGqcdt1XwAAwZ8I?format=png&name=small" alt="Binance" class="w-6 h-6 object-contain">
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-900">Binance</span>
-                                <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-4%</span>
+                                <span id="binanceBadge" class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200"></span>
                             </div>
                             <div class="text-[9px] text-gray-500 mt-1">الدفع عبر الإرسال لحسابنا (1$ = 10 MAD)</div>
                         </div>
@@ -166,7 +156,7 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-900">وكالة Cash Plus</span>
-                                <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-4%</span>
+                                <span id="cpBadge" class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200"></span>
                             </div>
                             <div class="text-[9px] text-gray-500 mt-1">الإرسال نقداً من أي وكالة بالاسم</div>
                         </div>
@@ -190,7 +180,6 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-900">تعبئة إنوي (*9)</span>
-                                <span class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200">-4%</span>
                             </div>
                             <div class="text-[9px] text-gray-500 mt-1">إدخال رموز التعبئة مباشرة</div>
                         </div>
@@ -214,7 +203,7 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-gray-900">الشراء عبر واتساب</span>
-                                <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded border border-gray-300">0%</span>
+                                <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded border border-gray-300">بدون تخفيض</span>
                             </div>
                             <div class="text-[9px] text-gray-500 mt-1">تواصل مباشر لتأكيد الطلب</div>
                         </div>
@@ -260,35 +249,49 @@
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         const accImg = urlParams.get('img');
-        const originalBankPrice = parseFloat(urlParams.get('bank')) || 0;
-        const originalInwiPrice = parseFloat(urlParams.get('inwi')) || 0;
+        
+        // استلام المتغيرات الجديدة من index.html
+        const bank = parseFloat(urlParams.get('bank')) || 0; // السعر الأصلي
+        const web = parseFloat(urlParams.get('web')) || 0;   // السعر المخفض
+        const ggStr = urlParams.get('gg');
+        const iosStr = urlParams.get('ios');
 
-        document.getElementById('viewsCount').innerText = Math.floor(Math.random() * (250 - 40 + 1)) + 40;
-
-        let finalBinanceUsd = 0;
-
-        if(accTitle && originalBankPrice > 0) {
+        if(accTitle && bank > 0) {
             document.getElementById('accTitle').innerText = accTitle;
             document.getElementById('accImg').src = accImg;
-            document.getElementById('baseBankPrice').innerText = originalBankPrice + " MAD";
-            document.getElementById('baseInwiPrice').innerText = originalInwiPrice + " MAD";
             
-            const pBank = originalBankPrice;
-            const pInwi = originalInwiPrice;
+            // حساب نسبة التخفيض المئوية للبطاقات
+            let discountPct = 0;
+            if(bank > web) {
+                discountPct = Math.round(((bank - web) / bank) * 100);
+            }
 
-            const newBank = Math.round(pBank * 0.93);
-            const newCashPlus = Math.round(pBank * 0.96);
-            const newInwi = Math.round(pInwi * 0.96);
-            const newWhatsapp = pBank;
-            
-            const oldBinance = (pBank / 10).toFixed(2);
-            finalBinanceUsd = ((pBank * 0.96) / 10).toFixed(2);
+            // إظهار بطاقة التخفيض فقط إذا كان هناك تخفيض فعلي
+            if(discountPct > 0) {
+                document.getElementById('bankBadge').innerText = `-${discountPct}%`;
+                document.getElementById('binanceBadge').innerText = `-${discountPct}%`;
+                document.getElementById('cpBadge').innerText = `-${discountPct}%`;
+            } else {
+                document.getElementById('bankBadge').classList.add('hidden');
+                document.getElementById('binanceBadge').classList.add('hidden');
+                document.getElementById('cpBadge').classList.add('hidden');
+            }
 
-            renderPriceBox('box-bank', pBank, newBank, 'MAD');
-            renderPriceBox('box-binance', oldBinance, finalBinanceUsd, '$');
-            renderPriceBox('box-cashplus', pBank, newCashPlus, 'MAD');
-            renderPriceBox('box-inwi', pInwi, newInwi, 'MAD');
-            renderPriceBox('box-whatsapp', pBank, newWhatsapp, 'MAD'); 
+            // منطق الروابط (lost vs NO)
+            document.getElementById('ggStatus').innerText = (ggStr === 'true') ? 'lost' : 'NO';
+            document.getElementById('iosStatus').innerText = (iosStr === 'true') ? 'lost' : 'NO';
+
+            // الأسعار النهائية للواجهة العلوية
+            const inwi = Math.round(web * 1.25);
+            document.getElementById('baseBankPrice').innerText = web + " MAD";
+            document.getElementById('baseInwiPrice').innerText = inwi + " MAD";
+
+            // أسعار طرق الدفع الفردية
+            renderPriceBox('box-bank', bank, web, 'MAD');
+            renderPriceBox('box-binance', (bank/10).toFixed(2), (web/10).toFixed(2), '$');
+            renderPriceBox('box-cashplus', bank, web, 'MAD');
+            renderPriceBox('box-inwi', bank, inwi, 'MAD'); // التعبئة بدون خط مشطوب
+            renderPriceBox('box-whatsapp', bank, bank, 'MAD'); // الواتساب بالسعر الأصلي
 
         } else {
             window.location.href = 'index.html';
@@ -313,23 +316,15 @@
             
             const method = methodElement.value;
             let finalPriceToPay = 0;
-            let priceTextForWa = "";
 
-            if(method === "تحويل بنكي") {
-                finalPriceToPay = Math.round(originalBankPrice * 0.93);
-                priceTextForWa = finalPriceToPay + " درهم";
+            if(method === "تحويل بنكي" || method === "وكالة كاش بليس") {
+                finalPriceToPay = web;
             } else if(method === "Binance") {
-                finalPriceToPay = finalBinanceUsd; 
-                priceTextForWa = "$" + finalPriceToPay;
-            } else if(method === "وكالة كاش بليس") {
-                finalPriceToPay = Math.round(originalBankPrice * 0.96);
-                priceTextForWa = finalPriceToPay + " درهم";
+                finalPriceToPay = (web / 10).toFixed(2);
             } else if(method === "تعبئة إنوي") {
-                finalPriceToPay = Math.round(originalInwiPrice * 0.96);
-                priceTextForWa = finalPriceToPay + " درهم";
+                finalPriceToPay = Math.round(web * 1.25);
             } else {
-                finalPriceToPay = originalBankPrice;
-                priceTextForWa = finalPriceToPay + " درهم";
+                finalPriceToPay = bank; // الواتساب
             }
 
             const btn = document.getElementById('submitBtn');
@@ -343,10 +338,11 @@
                 btn.innerHTML = originalHTML;
                 btn.className = originalClass;
 
+                // توجيه لصفحة التأكيد مع سكرول لأعلى (confirm.html ستتكفل بالسكرول)
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance" || method === "تعبئة إنوي") {
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
-                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن بعد التخفيض:* ${priceTextForWa}\n\nواش متوفر باش ندفع دابا؟`;
+                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPriceToPay} درهم\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
             }, 1000);
