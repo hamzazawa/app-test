@@ -46,8 +46,8 @@
 
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-sm">
             
-            <div class="relative w-full bg-gray-100 border-b border-gray-200 overflow-hidden">
-                <div id="imageGallery" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll h-56 items-center">
+            <div class="relative w-full bg-[#0a0a20] border-b border-gray-200 overflow-hidden">
+                <div id="imageGallery" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll items-center w-full relative">
                     </div>
                 <div id="galleryIndicators" class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-10">
                     </div>
@@ -237,7 +237,6 @@
         function renderPriceBox(containerId, oldPrice, newPrice, symbol) {
             const container = document.getElementById(containerId);
             if(!container) return;
-            // إذا كان السعر القديم فارغاً أو غير موجود، نعرض السعر الجديد فقط
             if(!oldPrice) {
                 container.innerHTML = `<span class="text-sm font-black text-blue-600">${newPrice} ${symbol}</span>`;
             } else {
@@ -257,20 +256,17 @@
 
         const web = parseFloat(urlParams.get('web')) || 0; 
         
-        // استخراج price_bot (إذا لم يوجد سيكون null)
         const botStr = urlParams.get('bot');
         const priceBot = (botStr && botStr.trim() !== "" && botStr !== "undefined") ? parseFloat(botStr) : null;  
 
         const ggStr = urlParams.get('gg');
         const iosStr = urlParams.get('ios');
 
-        // المتغيرات النهائية
         let finalWaPrice = 0;
 
         if(accTitle && web > 0) {
             document.getElementById('accTitle').innerText = accTitle;
             
-            // حقن الصور في المعرض
             let imagesList = [img1];
             if(img2 && img2.trim() !== "undefined" && img2.trim() !== "") imagesList.push(img2);
             if(img3 && img3.trim() !== "undefined" && img3.trim() !== "") imagesList.push(img3);
@@ -279,31 +275,40 @@
             const indicators = document.getElementById('galleryIndicators');
 
             imagesList.forEach((url, index) => {
-                // إزالة الخلفية السوداء واستخدام object-cover لملء المكان
-                gallery.innerHTML += `<img src="${url}" class="w-full h-full object-cover shrink-0 snap-center" alt="صورة ${index+1}">`;
+                // 🔥 التعديل هنا: w-full h-auto لكي تأخذ الصورة طولها التلقائي، وعمل بلوك للصورة لتفادي أي فراغات سفلية
+                gallery.innerHTML += `<img src="${url}" class="w-full h-auto block shrink-0 snap-center" alt="صورة ${index+1}">`;
                 if(imagesList.length > 1) {
-                    indicators.innerHTML += `<div class="w-1.5 h-1.5 rounded-full ${index===0 ? 'bg-blue-600' : 'bg-gray-300'} transition-colors duration-300 indicator-dot"></div>`;
+                    indicators.innerHTML += `<div class="w-1.5 h-1.5 rounded-full ${index===0 ? 'bg-blue-600' : 'bg-gray-400'} transition-colors duration-300 indicator-dot"></div>`;
                 }
             });
 
-            // 🔥 التعديل: برمجة حساس النقاط الزرقاء لتعمل عند سحب الصور
+            // 🔥 تم التعديل: تفعيل النقاط الزرقاء عند سحب الصور يدوياً
             if(imagesList.length > 1) {
+                // نستخدم IntersectionObserver لمراقبة أي صورة هي المعروضة حالياً على الشاشة
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            const index = Array.from(gallery.children).indexOf(entry.target);
+                            const imagesArray = Array.from(gallery.children);
+                            const index = imagesArray.indexOf(entry.target);
+                            
                             const dots = document.querySelectorAll('.indicator-dot');
                             dots.forEach((dot, i) => {
-                                dot.className = i === index ? "w-1.5 h-1.5 rounded-full bg-blue-600 transition-colors duration-300 indicator-dot" : "w-1.5 h-1.5 rounded-full bg-gray-300 transition-colors duration-300 indicator-dot";
+                                if(i === index) {
+                                    dot.classList.replace('bg-gray-400', 'bg-blue-600');
+                                } else {
+                                    dot.classList.replace('bg-blue-600', 'bg-gray-400');
+                                }
                             });
                         }
                     });
-                }, { root: gallery, threshold: 0.5 }); // التغيير يحدث عندما تظهر 50% من الصورة
+                }, { 
+                    root: gallery, 
+                    threshold: 0.6 // تفعيل النقطة عندما تظهر 60% من الصورة في الشاشة
+                });
 
                 Array.from(gallery.children).forEach(img => observer.observe(img));
             }
 
-            // 🔥 منطق التخفيضات الذكي كما طلبت
             let discountPct = 0;
             if(priceBot && priceBot > web) {
                 discountPct = Math.round(((priceBot - web) / priceBot) * 100);
@@ -326,22 +331,18 @@
             document.getElementById('baseBankPrice').innerText = web + " MAD";
             document.getElementById('baseInwiPrice').innerText = inwi + " MAD";
 
-            // 🔥 منطق واتساب: إذا كان هناك price_bot يوضع هو ثمن واتساب ومعه كلمة بدون تخفيض
-            // وإذا كان فارغاً نزيد 8% ولا نظهر شيء
             if(priceBot) {
                 finalWaPrice = priceBot;
-                document.getElementById('waBadge').classList.remove('hidden'); // إظهار شارة بدون تخفيض
+                document.getElementById('waBadge').classList.remove('hidden'); 
             } else {
-                finalWaPrice = Math.round(web * 1.08); // الزيادة بـ 8%
-                // الشارة ستبقى hidden أوتوماتيكياً
+                finalWaPrice = Math.round((web * 1.08) / 5) * 5; // تقريب سعر واتساب الإضافي لأقرب 5 دراهم أيضاً لمنظر أجمل
             }
 
-            // رسم الأسعار (السعر المشطوب يظهر فقط إذا كان priceBot موجوداً)
             renderPriceBox('box-bank', priceBot, web, 'MAD');
             renderPriceBox('box-binance', priceBot ? (priceBot/10).toFixed(2) : null, (web/10).toFixed(2), '$');
             renderPriceBox('box-cashplus', priceBot, web, 'MAD');
-            renderPriceBox('box-inwi', null, inwi, 'MAD'); // التعبئة بدون سعر مشطوب
-            renderPriceBox('box-whatsapp', null, finalWaPrice, 'MAD'); // واتساب بدون سعر مشطوب لأنه السعر النهائي الأصلي
+            renderPriceBox('box-inwi', null, inwi, 'MAD'); 
+            renderPriceBox('box-whatsapp', null, finalWaPrice, 'MAD'); 
 
         } else {
             window.location.href = 'index.html';
@@ -374,7 +375,7 @@
             } else if(method === "تعبئة إنوي") {
                 finalPriceToPay = Math.round((web * 1.25) / 5) * 5;
             } else {
-                finalPriceToPay = finalWaPrice; // استخدام السعر الذي حسبناه لواتساب
+                finalPriceToPay = finalWaPrice; 
             }
 
             const btn = document.getElementById('submitBtn');
