@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -14,7 +15,6 @@
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         
-        /* انيميشن Skeleton للصور */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -65,13 +65,14 @@
 
         <div id="emptyState" class="hidden flex-col items-center justify-center py-10">
             <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
-            <p class="text-sm font-bold text-gray-500">لا توجد حسابات في هذا النطاق السعري حالياً.</p>
+            <p class="text-sm font-bold text-gray-500">لا توجد حسابات متاحة في هذا النطاق السعري حالياً.</p>
         </div>
 
     </main>
 
     <script>
-        const FIREBASE_URL = 'https://hamza-kr-default-rtdb.firebaseio.com/acc.json';
+        // الرابط الجديد الذي طلبته
+        const FIREBASE_URL = 'https://hamza-f798c-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
 
         function parseDateString(dateStr) {
@@ -102,6 +103,21 @@
             }
         }
 
+        // دالة لزيادة عدد المشاهدات (+1) والتوجه لصفحة الشراء
+        async function registerViewAndRedirect(event, sellerName, accountId, url) {
+            event.preventDefault(); 
+            try {
+                await fetch('https://serverfirebase.fly.dev/api/increment-view', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ seller: sellerName, id: accountId })
+                });
+            } catch (e) {
+                console.error("View increment failed", e);
+            }
+            window.location.href = url; // التوجيه بعد إرسال الطلب
+        }
+
         function renderAccounts(filterType) {
             const grid = document.getElementById('accountsGrid');
             const emptyState = document.getElementById('emptyState');
@@ -110,12 +126,12 @@
 
             let accountsArray = [];
             for (const [id, acc] of Object.entries(allAccountsData)) {
-                if (id === "bot_menu" || !acc.title) continue; 
+                // إظهار الحسابات المتاحة فقط (available)
+                if (!acc || acc.status !== 'available' || !acc.title) continue; 
                 accountsArray.push({ id, ...acc });
             }
 
             accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
-
             const now = new Date();
 
             for (const acc of accountsArray) {
@@ -128,17 +144,15 @@
 
                 hasItems = true;
 
+                // التقريب لأقرب 5 دراهم لسعر إنوي
                 let rawInwi = priceWeb * 1.25;
                 let inwiPrice = Math.round(rawInwi / 5) * 5; 
 
-                // منطق جديد: إظهار علامة جديد لمدة 3 أيام (72 ساعة)
                 let isNew = false;
                 if (acc.timestamp) {
                     const accDate = parseDateString(acc.timestamp);
                     const diffInDays = (now.getTime() - accDate) / (1000 * 60 * 60 * 24);
-                    if (diffInDays <= 3) {
-                        isNew = true;
-                    }
+                    if (diffInDays <= 3) isNew = true;
                 }
 
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
@@ -151,15 +165,17 @@
                 
                 let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
+                // إضافة loading="lazy" للصورة لتخفيف الضغط
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
                     <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
                         ${newBadgeRibbon}
                         <div class="absolute inset-0 skeleton"></div>
                         <img src="${acc.img}" 
+                             loading="lazy" decoding="async"
                              onload="this.previousElementSibling.style.display='none'" 
                              class="w-full h-full object-cover" 
-                             alt="account">
+                             alt="${acc.title}">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
                         <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
@@ -175,7 +191,7 @@
                                 <span class="text-purple-700 text-xs font-bold">تعبئة إنوي:</span>
                                 <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
                             </div>
-                            <a href="${checkoutUrl}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
+                            <a href="${checkoutUrl}" onclick="registerViewAndRedirect(event, '${acc.seller}', '${acc.key || acc.id}', '${checkoutUrl}')" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
                                 شراء الحساب
                             </a>
                         </div>
