@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -71,7 +70,6 @@
     </main>
 
     <script>
-        // الرابط الجديد الذي طلبته
         const FIREBASE_URL = 'https://hamza-f798c-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
 
@@ -103,79 +101,100 @@
             }
         }
 
-        // دالة لزيادة عدد المشاهدات (+1) والتوجه لصفحة الشراء
-        async function registerViewAndRedirect(event, sellerName, accountId, url) {
+        // تم التعديل: انتقال فوري للصفحة بدون تأخير (Fire and Forget)
+        function registerViewAndRedirect(event, sellerName, accountId, url) {
             event.preventDefault(); 
-            try {
-                await fetch('https://serverfirebase.fly.dev/api/increment-view', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ seller: sellerName, id: accountId })
-                });
-            } catch (e) {
-                console.error("View increment failed", e);
-            }
-            window.location.href = url; // التوجيه بعد إرسال الطلب
+            // إرسال الطلب للسيرفر في الخلفية
+            fetch('https://serverfirebase.fly.dev/api/increment-view', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seller: sellerName, id: accountId })
+            }).catch(e => console.error("View increment failed", e));
+            
+            // التوجيه الفوري لصفحة الشراء
+            window.location.href = url;
         }
 
-// 🔥 تم التعديل: التوجيه الفوري وإرسال الطلب في الخلفية لتفادي أي تأخير!
-function registerViewAndRedirect(event, sellerName, accountId, url) {
-    event.preventDefault(); 
-    
-    // إرسال الطلب للسيرفر وعدم انتظاره (Fire and Forget)
-    fetch('https://serverfirebase.fly.dev/api/increment-view', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ seller: sellerName, id: accountId })
-    }).catch(e => console.log("View registered"));
-    
-    // التوجيه الفوري في نفس اللحظة!
-    window.location.href = url; 
-}
+        function renderAccounts(filterType) {
+            const grid = document.getElementById('accountsGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = ''; 
+            let hasItems = false;
 
-// ... داخل حلقة for (const acc of accountsArray) ...
+            let accountsArray = [];
+            for (const [id, acc] of Object.entries(allAccountsData)) {
+                if (!acc || acc.status !== 'available' || !acc.title) continue; 
+                accountsArray.push({ id, ...acc });
+            }
 
-// 🔥 التعديل: إرسال img2 و img3 في الرابط ليقرأها الـ checkout
-const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&img2=${encodeURIComponent(acc.img2 || '')}&img3=${encodeURIComponent(acc.img3 || '')}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
+            accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
+            const now = new Date();
 
-let newBadgeRibbon = isNew ? `
-<div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-7 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg uppercase tracking-widest">جديد</div>` : '';
+            for (const acc of accountsArray) {
+                let priceWeb = parseFloat(acc.price_web) || 0;
+                let bankPrice = parseFloat(acc.bank_price) || priceWeb;
+                
+                if (filterType === 'under100' && priceWeb >= 100) continue;
+                if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
+                if (filterType === 'over300' && priceWeb <= 300) continue;
 
-let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
+                hasItems = true;
 
-// 🔥 التعديل: وضع bg-black و object-contain لتعرض الصورة كاملة غير مقصوصة
-grid.innerHTML += `
-<div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
-    <div class="relative h-48 w-full bg-black overflow-hidden">
-        ${newBadgeRibbon}
-        <div class="absolute inset-0 skeleton"></div>
-        <img src="${acc.img}" 
-             loading="lazy" decoding="async"
-             onload="this.previousElementSibling.style.display='none'" 
-             class="w-full h-full object-contain" 
-             alt="${acc.title}">
-    </div>
-    <div class="p-4 flex-grow flex flex-col justify-between">
-        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
-        <div>
-            <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
-                <span class="text-blue-700 text-xs font-bold">السعر:</span>
-                <div class="text-left">
-                    ${oldPriceHtml}
-                    <span class="font-black text-blue-700 text-sm">${priceWeb} MAD</span>
+                let rawInwi = priceWeb * 1.25;
+                let inwiPrice = Math.round(rawInwi / 5) * 5; 
+
+                let isNew = false;
+                if (acc.timestamp) {
+                    const accDate = parseDateString(acc.timestamp);
+                    const diffInDays = (now.getTime() - accDate) / (1000 * 60 * 60 * 24);
+                    if (diffInDays <= 3) {
+                        isNew = true;
+                    }
+                }
+
+                // تم التعديل: تمرير img2 و img3 لصفحة الدفع
+                const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&img2=${encodeURIComponent(acc.img2 || '')}&img3=${encodeURIComponent(acc.img3 || '')}&bank=${bankPrice}&web=${priceWeb}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
+                
+                let newBadgeRibbon = isNew ? `
+                <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-7 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg uppercase tracking-widest">
+                    جديد
                 </div>
-            </div>
-            <div class="flex justify-between items-center bg-purple-50 p-2.5 rounded-lg mb-4 border border-purple-100">
-                <span class="text-purple-700 text-xs font-bold">تعبئة إنوي:</span>
-                <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
-            </div>
-            <a href="${checkoutUrl}" onclick="registerViewAndRedirect(event, '${acc.seller}', '${acc.key || acc.id}', '${checkoutUrl}')" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
-                شراء الحساب
-            </a>
-        </div>
-    </div>
-</div>`;
+                ` : '';
+                
+                let oldPriceHtml = (bankPrice > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${bankPrice} MAD</del>` : '';
 
+                // تم التعديل: إظهار الصورة بالكامل باستخدام bg-black و object-contain
+                grid.innerHTML += `
+                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
+                    <div class="relative h-48 w-full bg-black overflow-hidden">
+                        ${newBadgeRibbon}
+                        <div class="absolute inset-0 skeleton"></div>
+                        <img src="${acc.img}" 
+                             loading="lazy" decoding="async"
+                             onload="this.previousElementSibling.style.display='none'" 
+                             class="w-full h-full object-contain" 
+                             alt="${acc.title}">
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col justify-between">
+                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
+                        <div>
+                            <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
+                                <span class="text-blue-700 text-xs font-bold">السعر:</span>
+                                <div class="text-left">
+                                    ${oldPriceHtml}
+                                    <span class="font-black text-blue-700 text-sm">${priceWeb} MAD</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center bg-purple-50 p-2.5 rounded-lg mb-4 border border-purple-100">
+                                <span class="text-purple-700 text-xs font-bold">تعبئة إنوي:</span>
+                                <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
+                            </div>
+                            <a href="${checkoutUrl}" onclick="registerViewAndRedirect(event, '${acc.seller}', '${acc.key || acc.id}', '${checkoutUrl}')" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
+                                شراء الحساب
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
             }
 
             if (!hasItems) {
