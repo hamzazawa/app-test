@@ -104,13 +104,14 @@
                                 <span class="text-sm font-bold text-gray-900">تحويل بنكي</span>
                                 <span id="bankBadge" class="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded border border-yellow-200 hidden"></span>
                             </div>
-                            <div class="flex items-center gap-1.5 mt-1.5">
+                            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                <img src="https://pbs.twimg.com/media/HK9NiUPXwAEJXge?format=png&name=360x360" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqc0vJXMAAdYt-?format=png&name=small" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqcdtbWcAAheBa?format=png&name=240x240" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqcdttWAAAH6zg?format=png&name=small" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqc0wpWcAAZXQI?format=png&name=small" class="h-3 object-contain">
                                 <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" class="h-3 object-contain">
-                                <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-1 rounded border border-blue-100">بنك آخر</span>
+                                <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-1 rounded border border-blue-100">بنوك أخرى</span>
                             </div>
                         </div>
                     </div>
@@ -250,10 +251,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
         
+        // استخراج جميع المتغيرات بما فيها المعرّف
+        const accKey = urlParams.get('key') || '';
         const img1 = urlParams.get('img');
         const img2 = urlParams.get('img2');
         const img3 = urlParams.get('img3');
 
+        // السعر هنا يتضمن هامش الربح 5% المضاف مسبقاً من الصفحة الرئيسية
         const web = parseFloat(urlParams.get('web')) || 0; 
         
         const botStr = urlParams.get('bot');
@@ -275,16 +279,13 @@
             const indicators = document.getElementById('galleryIndicators');
 
             imagesList.forEach((url, index) => {
-                // 🔥 التعديل هنا: w-full h-auto لكي تأخذ الصورة طولها التلقائي، وعمل بلوك للصورة لتفادي أي فراغات سفلية
                 gallery.innerHTML += `<img src="${url}" class="w-full h-auto block shrink-0 snap-center" alt="صورة ${index+1}">`;
                 if(imagesList.length > 1) {
                     indicators.innerHTML += `<div class="w-1.5 h-1.5 rounded-full ${index===0 ? 'bg-blue-600' : 'bg-gray-400'} transition-colors duration-300 indicator-dot"></div>`;
                 }
             });
 
-            // 🔥 تم التعديل: تفعيل النقاط الزرقاء عند سحب الصور يدوياً
             if(imagesList.length > 1) {
-                // نستخدم IntersectionObserver لمراقبة أي صورة هي المعروضة حالياً على الشاشة
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -301,10 +302,7 @@
                             });
                         }
                     });
-                }, { 
-                    root: gallery, 
-                    threshold: 0.6 // تفعيل النقطة عندما تظهر 60% من الصورة في الشاشة
-                });
+                }, { root: gallery, threshold: 0.6 });
 
                 Array.from(gallery.children).forEach(img => observer.observe(img));
             }
@@ -335,7 +333,7 @@
                 finalWaPrice = priceBot;
                 document.getElementById('waBadge').classList.remove('hidden'); 
             } else {
-                finalWaPrice = Math.round((web * 1.08) / 5) * 5; // تقريب سعر واتساب الإضافي لأقرب 5 دراهم أيضاً لمنظر أجمل
+                finalWaPrice = Math.round((web * 1.08) / 5) * 5; 
             }
 
             renderPriceBox('box-bank', priceBot, web, 'MAD');
@@ -390,9 +388,14 @@
                 btn.className = originalClass;
 
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance" || method === "تعبئة إنوي") {
-                    window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
+                    // 🔥 التمرير الذكي: تمرير كل المتغيرات الأصلية بالإضافة إلى الثمن وطريقة الدفع إلى confirm.html
+                    const currentParams = new URLSearchParams(window.location.search);
+                    currentParams.set('price', finalPriceToPay);
+                    currentParams.set('method', method);
+                    window.location.href = `confirm.html?${currentParams.toString()}`;
                 } else {
-                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPriceToPay} درهم\n\nواش متوفر باش ندفع دابا؟`;
+                    // 🔥 تم إرفاق الـ key داخل رسالة الواتساب 
+                    const msg = `سلام EPEC STORE،\n\n🛒 *الحساب:* ${accTitle}\n🔑 *المعرف:* ${accKey}\n💳 *طريقة الدفع:* ${method}\n💰 *الثمن:* ${finalPriceToPay} درهم\n\nواش متوفر باش ندفع دابا؟`;
                     window.location.href = `https://wa.me/212663011890?text=${encodeURIComponent(msg)}`;
                 }
             }, 1000);
@@ -400,3 +403,4 @@
     </script>
 </body>
 </html>
+
