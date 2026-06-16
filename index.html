@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -147,7 +148,6 @@
                     }
                 }
 
-                // 🔥 تمرير price_bot في الرابط 
                 const checkoutUrl = `checkout.html?id=${acc.id}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&img2=${encodeURIComponent(acc.img2 || '')}&img3=${encodeURIComponent(acc.img3 || '')}&web=${priceWeb}&bot=${acc.price_bot || ''}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}`;
                 
                 let newBadgeRibbon = isNew ? `
@@ -156,20 +156,22 @@
                 </div>
                 ` : '';
                 
-                // حساب التخفيض للواجهة الرئيسية إذا وجد price_bot
                 let priceBotValue = acc.price_bot ? parseFloat(acc.price_bot) : null;
                 let oldPriceHtml = (priceBotValue && priceBotValue > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${priceBotValue} MAD</del>` : '';
 
-                // 🔥 التعديل: إزالة bg-black وجعل الصورة تملأ المكان بـ object-cover وتقص الحواف قليلا بذكاء
+                // 🔥 التعديل الجذري للصورة: wrap content عبر إعطاء العرض الكامل w-full والطول التلقائي h-auto
+                // قمت بإضافة معرف فريد للـ skeleton ليختفي تماماً عندما تجهز الصورة
+                let uniqueId = "skel_" + acc.id.replace(/[^a-zA-Z0-9]/g, '');
+                
                 grid.innerHTML += `
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
-                    <div class="relative h-48 w-full bg-gray-100 overflow-hidden">
+                    <div class="relative w-full bg-[#0a0a20] flex items-center justify-center overflow-hidden">
                         ${newBadgeRibbon}
-                        <div class="absolute inset-0 skeleton"></div>
+                        <div class="absolute inset-0 skeleton" id="${uniqueId}"></div>
                         <img src="${acc.img}" 
                              loading="lazy" decoding="async"
-                             onload="this.previousElementSibling.style.display='none'" 
-                             class="w-full h-full object-cover" 
+                             onload="document.getElementById('${uniqueId}').style.display='none'" 
+                             class="w-full h-auto block" 
                              alt="${acc.title}">
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
