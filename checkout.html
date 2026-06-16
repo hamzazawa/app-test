@@ -46,12 +46,14 @@
 
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-sm">
             
-            <div class="relative h-48 w-full bg-gray-100 border-b border-gray-200">
-                <img id="accImg" src="" alt="Account Image" class="w-full h-full object-cover">
+            <div class="relative w-full bg-black border-b border-gray-200 overflow-hidden">
+                <div id="imageGallery" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll h-56 items-center">
+                    </div>
+                <div id="galleryIndicators" class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-10">
+                    </div>
             </div>
             
             <div class="p-4">
-                
                 <div class="mb-5 w-full overflow-x-auto hide-scroll" dir="ltr">
                     <div class="w-max mx-auto flex items-center justify-center gap-2.5 bg-gray-50 border border-gray-100 px-3 py-2 rounded-lg whitespace-nowrap">
                         <span class="text-[11px] font-black text-blue-600 tracking-wide flex items-center">Links:</span>
@@ -81,7 +83,6 @@
                         <p id="baseInwiPrice" class="font-black text-lg text-blue-900">0 MAD</p>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -248,25 +249,41 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const accTitle = urlParams.get('title');
-        const accImg = urlParams.get('img');
         
-        // استلام المتغيرات الجديدة من index.html
-        const bank = parseFloat(urlParams.get('bank')) || 0; // السعر الأصلي
-        const web = parseFloat(urlParams.get('web')) || 0;   // السعر المخفض
+        // 🔥 تم التعديل: جلب كل الصور المتوفرة من الرابط
+        const img1 = urlParams.get('img');
+        const img2 = urlParams.get('img2');
+        const img3 = urlParams.get('img3');
+
+        const bank = parseFloat(urlParams.get('bank')) || 0; 
+        const web = parseFloat(urlParams.get('web')) || 0;   
         const ggStr = urlParams.get('gg');
         const iosStr = urlParams.get('ios');
 
         if(accTitle && bank > 0) {
             document.getElementById('accTitle').innerText = accTitle;
-            document.getElementById('accImg').src = accImg;
             
-            // حساب نسبة التخفيض المئوية للبطاقات
+            // حقن الصور في المعرض
+            let imagesList = [img1];
+            if(img2 && img2.trim() !== "undefined" && img2.trim() !== "") imagesList.push(img2);
+            if(img3 && img3.trim() !== "undefined" && img3.trim() !== "") imagesList.push(img3);
+
+            const gallery = document.getElementById('imageGallery');
+            const indicators = document.getElementById('galleryIndicators');
+
+            imagesList.forEach((url, index) => {
+                gallery.innerHTML += `<img src="${url}" class="w-full h-full object-contain shrink-0 snap-center" alt="صورة ${index+1}">`;
+                if(imagesList.length > 1) {
+                    indicators.innerHTML += `<div class="w-1.5 h-1.5 rounded-full ${index===0 ? 'bg-blue-500' : 'bg-white/50 border border-gray-400'}"></div>`;
+                }
+            });
+
+            // حساب التخفيض
             let discountPct = 0;
             if(bank > web) {
                 discountPct = Math.round(((bank - web) / bank) * 100);
             }
 
-            // إظهار بطاقة التخفيض فقط إذا كان هناك تخفيض فعلي
             if(discountPct > 0) {
                 document.getElementById('bankBadge').innerText = `-${discountPct}%`;
                 document.getElementById('binanceBadge').innerText = `-${discountPct}%`;
@@ -277,21 +294,18 @@
                 document.getElementById('cpBadge').classList.add('hidden');
             }
 
-            // منطق الروابط (lost vs NO)
             document.getElementById('ggStatus').innerText = (ggStr === 'true') ? 'lost' : 'NO';
             document.getElementById('iosStatus').innerText = (iosStr === 'true') ? 'lost' : 'NO';
 
-            // الأسعار النهائية للواجهة العلوية
-            const inwi = Math.round(web * 1.25);
+            const inwi = Math.round((web * 1.25) / 5) * 5; 
             document.getElementById('baseBankPrice').innerText = web + " MAD";
             document.getElementById('baseInwiPrice').innerText = inwi + " MAD";
 
-            // أسعار طرق الدفع الفردية
             renderPriceBox('box-bank', bank, web, 'MAD');
             renderPriceBox('box-binance', (bank/10).toFixed(2), (web/10).toFixed(2), '$');
             renderPriceBox('box-cashplus', bank, web, 'MAD');
-            renderPriceBox('box-inwi', bank, inwi, 'MAD'); // التعبئة بدون خط مشطوب
-            renderPriceBox('box-whatsapp', bank, bank, 'MAD'); // الواتساب بالسعر الأصلي
+            renderPriceBox('box-inwi', bank, inwi, 'MAD');
+            renderPriceBox('box-whatsapp', bank, bank, 'MAD'); 
 
         } else {
             window.location.href = 'index.html';
@@ -322,9 +336,9 @@
             } else if(method === "Binance") {
                 finalPriceToPay = (web / 10).toFixed(2);
             } else if(method === "تعبئة إنوي") {
-                finalPriceToPay = Math.round(web * 1.25);
+                finalPriceToPay = Math.round((web * 1.25) / 5) * 5;
             } else {
-                finalPriceToPay = bank; // الواتساب
+                finalPriceToPay = bank;
             }
 
             const btn = document.getElementById('submitBtn');
@@ -338,7 +352,6 @@
                 btn.innerHTML = originalHTML;
                 btn.className = originalClass;
 
-                // توجيه لصفحة التأكيد مع سكرول لأعلى (confirm.html ستتكفل بالسكرول)
                 if(method === "تحويل بنكي" || method === "وكالة كاش بليس" || method === "Binance" || method === "تعبئة إنوي") {
                     window.location.href = `confirm.html?price=${finalPriceToPay}&method=${encodeURIComponent(method)}`;
                 } else {
