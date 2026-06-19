@@ -46,7 +46,7 @@
                 
                 <div class="flex justify-between items-center">
                     <span class="text-xs text-gray-500"><i class="fa-solid fa-users mr-1"></i> ترتيبك في اللائحة:</span>
-                    <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded font-bold text-xs" id="queueNum">1</span>
+                    <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded font-bold text-xs" id="queueNum">...</span>
                 </div>
                 
                 <div class="flex justify-between items-center">
@@ -71,9 +71,15 @@
                 <i class="fa-solid fa-pen-to-square"></i> تعديل معلوماتي
             </button>
             
-            <a href="https://wa.me/212663011890?text=سلام،%20أنا%20صاحب%20الطلب%20الجديد%20واش%20وصلكم؟" target="_blank" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3.5 rounded-xl transition flex justify-center items-center gap-2 text-sm shadow-lg shadow-green-500/30">
+            <a id="whatsappBtn" href="#" target="_blank" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-3.5 rounded-xl transition flex justify-center items-center gap-2 text-sm shadow-lg shadow-green-500/30">
                 <i class="fa-brands fa-whatsapp text-lg"></i> تواصل مع الدعم عبر الواتساب
             </a>
+            
+            <div class="text-center mt-4 pt-2">
+                <a href="index.html" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition underline">
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
         </div>
 
     </div>
@@ -83,6 +89,8 @@
         const orderId = urlParams.get('orderId');
         const price = urlParams.get('price');
         const method = urlParams.get('method');
+        // 🔥 جلب ترتيب الزبون الفعلي من الرابط الذي أرسلته confirm.html
+        const queue = urlParams.get('queue');
 
         if(orderId && price && method) {
             document.getElementById('orderId').innerText = orderId;
@@ -90,10 +98,16 @@
             document.getElementById('pricePaid').innerText = price + symbol;
             document.getElementById('paymentMethod').innerText = method;
             
-            document.getElementById('queueNum').innerText = Math.floor(Math.random() * 4) + 1;
+            document.getElementById('queueNum').innerText = queue ? queue : "1";
+            
+            // تحديث رسالة الواتساب لتشمل رقم المرجع
+            const waMsg = `سلام، أنا صاحب الطلب رقم ${orderId} واش وصلكم الدفع ديالي؟`;
+            document.getElementById('whatsappBtn').href = `https://wa.me/212663011890?text=${encodeURIComponent(waMsg)}`;
+
         } else {
             window.location.href = 'index.html';
         }
     </script>
 </body>
 </html>
+
