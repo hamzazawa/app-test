@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -98,16 +99,16 @@
                     </div>
                 </div>
 
+                <!-- 🔥 إضافة BMCE هنا -->
                 <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
-                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#ffd700]"></div>
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-[#004b87]"></div>
                     <div class="flex justify-between items-center mb-3">
-                        <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" alt="CashPlus" class="h-6 object-contain rounded">
+                        <img src="https://pbs.twimg.com/media/HK9NiUPXwAEJXge?format=png&name=360x360" alt="BMCE" class="h-6 object-contain rounded">
                         <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
-                    <p class="text-[10px] text-gray-500 mb-2">رقم الهاتف للتحويل من تطبيق كاش بليس:</p>
                     <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
-                        <code id="cpPhone" class="text-sm font-bold text-gray-800 tracking-widest dir-ltr">0708011007</code>
-                        <button onclick="copyElementText('cpPhone', this)" class="bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition">
+                        <code id="bmceRib" class="text-[11px] font-bold text-gray-800 tracking-wider dir-ltr">011726000002200000327565</code>
+                        <button onclick="copyElementText('bmceRib', this)" class="bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-700 w-8 h-8 rounded-md flex items-center justify-center transition shrink-0 ml-2">
                             <i class="fa-regular fa-copy"></i>
                         </button>
                     </div>
@@ -115,6 +116,7 @@
 
                 <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
                     <div class="absolute right-0 top-0 w-1.5 h-full bg-slate-800"></div>
+                    <!-- 🔥 تم تعديل العنوان والوصف حسب طلبك -->
                     <h4 class="text-sm font-black text-gray-800 mb-3 border-b border-gray-100 pb-2">تحويل من بنك آخر</h4>
                     
                     <div class="bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-bold p-2.5 rounded-lg mb-3 flex gap-2">
@@ -123,7 +125,7 @@
                     </div>
                     
                     <div class="flex justify-between items-center mb-3">
-                        <span class="text-xs font-bold text-gray-600">نحو (التجاري وفا بنك)</span>
+                        <span class="text-xs font-bold text-gray-600">بنك آخر</span>
                         <span class="text-xs font-bold text-gray-700">HAMZA ELKIRI <button onclick="copyRawText('HAMZA ELKIRI', this)" class="ml-1 text-gray-400 hover:text-blue-500 transition"><i class="fa-regular fa-copy"></i></button></span>
                     </div>
                     <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2 border border-gray-200">
@@ -182,6 +184,7 @@
                     <div id="bank-selector-wrapper-proof" class="hidden">
                         <label class="block text-[11px] font-bold text-gray-600 mb-2">إلى أي حساب أرسلت المبلغ؟ <span class="text-red-500">*</span></label>
                         <div class="grid grid-cols-2 gap-2">
+                            <!-- 🔥 تمت إضافة البنوك الجديدة إلى قائمة الاختيار -->
                             <label class="bank-radio cursor-pointer">
                                 <input type="radio" name="sent_bank" value="CIH Bank" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
@@ -210,10 +213,24 @@
                                     <span class="text-[10px] font-bold text-gray-700">Pocket Bank</span>
                                 </div>
                             </label>
+                            <label class="bank-radio cursor-pointer">
+                                <input type="radio" name="sent_bank" value="BMCE" class="hidden">
+                                <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
+                                    <img src="https://pbs.twimg.com/media/HK9NiUPXwAEJXge?format=png&name=360x360" class="h-4">
+                                    <span class="text-[10px] font-bold text-gray-700">BMCE</span>
+                                </div>
+                            </label>
+                            <label class="bank-radio cursor-pointer">
+                                <input type="radio" name="sent_bank" value="Cash Plus" class="hidden">
+                                <div class="border border-gray-200 rounded-lg p-2 flex items-center gap-2 transition relative">
+                                    <img src="https://pbs.twimg.com/media/HGqcdtnWIAAUYA_?format=png&name=240x240" class="h-4">
+                                    <span class="text-[10px] font-bold text-gray-700">Cash Plus</span>
+                                </div>
+                            </label>
                             <label class="bank-radio cursor-pointer col-span-2">
                                 <input type="radio" name="sent_bank" value="بنك آخر" class="hidden">
                                 <div class="border border-gray-200 rounded-lg p-2 flex items-center justify-center gap-2 transition relative bg-gray-50">
-                                    <span class="text-[10px] font-bold text-gray-700">أرسلت من بنك آخر / تطبيق كاش بليس</span>
+                                    <span class="text-[10px] font-bold text-gray-700">أرسلت من بنك آخر</span>
                                 </div>
                             </label>
                         </div>
@@ -292,6 +309,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const price = urlParams.get('price');
         const method = urlParams.get('method');
+        const accKey = urlParams.get('key') || 'UNKNOWN'; // سحب المفتاح السري للحساب
 
         if(!price || !method) {
             window.location.href = 'index.html';
@@ -316,7 +334,6 @@
             }
         }
 
-        // السكرول للأعلى عند ضغط "أرسلت المال"
         function showProofSection(isInwi = false) {
             document.getElementById('step-send-money').classList.add('hidden');
             const proofSec = document.getElementById('step-fill-proof');
@@ -326,7 +343,6 @@
 
             setTimeout(() => {
                 proofSec.classList.remove('opacity-0');
-                // توجيه الشاشة مباشرة لبداية الاستمارة
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
@@ -337,7 +353,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // إضافة حقل إنوي مع زر الحذف
         function addInwiRow() {
             const container = document.getElementById('inwi-inputs');
             const row = document.createElement('div');
@@ -365,7 +380,7 @@
             navigator.clipboard.writeText(text).then(() => {
                 const icon = btnElement.querySelector('i');
                 icon.className = 'fa-solid fa-check text-green-500';
-                showToast('تم نسخ الاسم');
+                showToast('تم نسخ الاسم', 'fa-solid fa-check text-green-400');
                 setTimeout(() => icon.className = 'fa-regular fa-copy', 2000);
             });
         }
@@ -376,14 +391,15 @@
                 const icon = btnElement.querySelector('i');
                 const originalClass = icon.className;
                 icon.className = 'fa-solid fa-check text-green-500';
-                showToast('تم النسخ بنجاح');
+                showToast('تم النسخ بنجاح', 'fa-solid fa-check text-green-400');
                 setTimeout(() => icon.className = originalClass, 2000);
             });
         }
 
-        function showToast(msg) {
+        function showToast(msg, iconClass) {
             const toast = document.getElementById('toastNotif');
             document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').className = iconClass;
             toast.classList.remove('opacity-0');
             setTimeout(() => toast.classList.add('opacity-0'), 2500);
         }
@@ -396,19 +412,22 @@
             }
         }
 
-        function submitToStatus() {
+        // 🔥 الدالة الرئيسية: رفع الصورة وتأكيد الطلب API
+        async function submitToStatus() {
             const userName = document.getElementById('userName').value.trim();
             const userPhone = document.getElementById('userPhone').value.trim();
             let selectedBankStr = "";
 
             if(method === "تحويل بنكي") {
                 const b = document.querySelector('input[name="sent_bank"]:checked');
-                if(!b) { alert("المرجو تحديد البنك الذي أرسلت إليه المال (أعلى النموذج)."); return; }
+                if(!b) { showToast("المرجو تحديد البنك الذي أرسلت إليه", "fa-solid fa-circle-exclamation text-yellow-400"); return; }
                 selectedBankStr = b.value;
+            } else {
+                selectedBankStr = method;
             }
 
             if(userName === "" || userPhone === "") {
-                alert("المرجو إدخال الاسم ورقم الواتساب أولاً.");
+                showToast("المرجو إدخال الاسم ورقم الهاتف", "fa-solid fa-circle-exclamation text-red-400");
                 return;
             }
 
@@ -416,12 +435,65 @@
             const btn = document.getElementById('confirmBtn');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الطلب...';
             btn.classList.replace('bg-blue-600', 'bg-gray-400');
-            
-            setTimeout(() => {
-                let finalMethod = method;
-                if(selectedBankStr) finalMethod += ` (${selectedBankStr})`;
-                window.location.href = `status.html?orderId=${randomOrderId}&price=${price}&method=${encodeURIComponent(finalMethod)}&name=${encodeURIComponent(userName)}&phone=${userPhone}`;
-            }, 1000);
+            btn.disabled = true;
+
+            try {
+                let uploadedImageUrl = "";
+                const fileInput = document.getElementById('proofImage');
+                
+                // 1. رفع الصورة إذا وجدت
+                if(fileInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append('image', fileInput.files[0]);
+                    
+                    const uploadRes = await fetch('https://serverfirebase.fly.dev/api/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.success) {
+                        uploadedImageUrl = uploadData.imageUrl;
+                    }
+                }
+
+                // 2. تجميع البيانات وإرسالها
+                const finalMethod = method === "تحويل بنكي" ? `${method} (${selectedBankStr})` : method;
+                
+                const response = await fetch('https://serverfirebase.fly.dev/api/submit-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        accountKey: accKey,
+                        name: userName,
+                        phone: userPhone,
+                        bank: finalMethod,
+                        image: uploadedImageUrl,
+                        deviceInfo: navigator.userAgent, // إرسال معلومات متصفح/هاتف الزبون
+                        orderId: randomOrderId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // 3. التحقق من السبام
+                if(!data.success) {
+                    showToast(data.message, "fa-solid fa-circle-exclamation text-yellow-400");
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> تأكيد الطلب';
+                    btn.classList.replace('bg-gray-400', 'bg-blue-600');
+                    btn.disabled = false;
+                    return;
+                }
+
+                // 4. توجيه لصفحة الحالة وتمرير ترتيبه في الطابور (queue)
+                window.location.href = `status.html?orderId=${randomOrderId}&price=${price}&method=${encodeURIComponent(finalMethod)}&queue=${data.position}`;
+
+            } catch (error) {
+                console.error(error);
+                showToast("حدث خطأ في الاتصال بالخادم", "fa-solid fa-circle-exclamation text-red-400");
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> تأكيد الطلب';
+                btn.classList.replace('bg-gray-400', 'bg-blue-600');
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
