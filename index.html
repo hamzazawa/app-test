@@ -72,7 +72,7 @@
     <script>
         const FIREBASE_URL = 'https://hamza-f798c-default-rtdb.firebaseio.com/acc.json';
         let allAccountsData = {}; 
-        let isDataLoaded = false; // 🔥 حماية لمنع تضارب الفلتر قبل تحميل البيانات
+        let isDataLoaded = false; 
 
         function parseDateString(dateStr) {
             if (!dateStr) return 0;
@@ -92,10 +92,13 @@
                     allAccountsData = data;
                     isDataLoaded = true;
                     
-                    // حساب العدد الفعلي للحسابات المتاحة وتحديث الشريط العلوي
                     let activeAccountsCount = 0;
                     for (const [id, acc] of Object.entries(data)) {
-                        if (acc && acc.status === 'available' && acc.title) activeAccountsCount++;
+                        // 🔥 التعديل: نتأكد من حالة الحساب وأن مفتاح push لا يساوي false لاحتسابه
+                        if (acc && acc.status === 'available' && acc.title) {
+                            if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
+                            activeAccountsCount++;
+                        }
                     }
                     document.getElementById('activeCount').innerText = activeAccountsCount;
 
@@ -130,6 +133,9 @@
             let accountsArray = [];
             for (const [id, acc] of Object.entries(allAccountsData)) {
                 if (!acc || acc.status !== 'available' || !acc.title) continue; 
+                // 🔥 التعديل الجذري: إذا كان مفتاح push هو false (أو "false") لا تضف الحساب للواجهة
+                if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
+
                 accountsArray.push({ id, ...acc });
             }
 
@@ -139,7 +145,6 @@
             for (const acc of accountsArray) {
                 let originalWebPrice = parseFloat(acc.price_web) || 0;
                 
-                // 🔥 إضافة هامش ربح 5% للسعر وتقريبه
                 let priceWeb = Math.round(originalWebPrice * 1.05);
                 let bankPrice = parseFloat(acc.bank_price) || priceWeb;
                 
@@ -163,7 +168,6 @@
 
                 const accKey = acc.key || acc.id;
 
-                // 🔥 تمرير جميع البيانات لصفحة الدفع ليتم تناقلها لاحقاً
                 const checkoutUrl = `checkout.html?id=${acc.id}&key=${accKey}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&img2=${encodeURIComponent(acc.img2 || '')}&img3=${encodeURIComponent(acc.img3 || '')}&bank=${bankPrice}&web=${priceWeb}&bot=${acc.price_bot || ''}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}&seller=${encodeURIComponent(acc.seller || '')}&desc=${encodeURIComponent(acc.desc || '')}&limit=${encodeURIComponent(acc.limit || '')}`;
                 
                 let newBadgeRibbon = isNew ? `
@@ -218,7 +222,7 @@
         }
 
         function filterAccounts(filterType, btnElement) {
-            if(!isDataLoaded) return; // 🔥 حماية لمنع الفلترة قبل التنزيل
+            if(!isDataLoaded) return; 
             
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
