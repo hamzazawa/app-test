@@ -8,232 +8,214 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f9fafb; color: #111827; scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f3f4f6; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        
+
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
         }
+
         @keyframes shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
     </style>
 </head>
+
 <body class="antialiased flex flex-col min-h-screen">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-3 max-w-5xl flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-gamepad text-blue-600 text-2xl"></i>
-                <h1 class="text-xl font-black text-gray-900 tracking-wider">EPEC STORE</h1>
-            </div>
-            
-            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
-                <span class="relative flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-sm"></span>
-                </span>
-                <span class="text-xs font-bold text-gray-700">متوفر <span id="activeCount" class="text-blue-600 font-black">...</span> حساب</span>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-4 max-w-5xl flex-grow">
-        
-        <div class="flex justify-center mb-4 mt-2">
-            <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm text-center">
-                <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center">الكل</button>
-                <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">أقل من 100</button>
-                <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center">100 - 300</button>
-                <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 transition-colors flex justify-center items-center">+300 درهم</button>
-            </div>
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <div class="container mx-auto px-4 py-3 max-w-5xl flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-gamepad text-blue-600 text-2xl"></i>
+            <h1 class="text-xl font-black text-gray-900 tracking-wider">EPEC STORE</h1>
         </div>
 
-        <div id="loadingState" class="flex flex-col items-center justify-center py-10">
-            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-3"></i>
-            <p class="text-sm font-bold text-gray-500">جاري جلب الحسابات المتاحة...</p>
+        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+            <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-sm"></span>
+            </span>
+            <span class="text-xs font-bold text-gray-700">
+                متوفر <span id="activeCount" class="text-blue-600 font-black">0</span> حساب
+            </span>
         </div>
+    </div>
+</header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden" id="accountsGrid"></div>
+<main class="container mx-auto px-4 py-4 max-w-5xl flex-grow">
 
-        <div id="emptyState" class="hidden flex-col items-center justify-center py-10">
-            <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
-            <p class="text-sm font-bold text-gray-500">لا توجد حسابات متاحة في هذا النطاق السعري حالياً.</p>
+    <div class="flex justify-center mb-4 mt-2">
+        <div class="flex bg-white rounded-xl overflow-hidden border border-gray-200 w-full max-w-2xl shadow-sm text-center">
+            <button onclick="filterAccounts('all', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold bg-blue-600 text-white">الكل</button>
+            <button onclick="filterAccounts('under100', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500">أقل من 100</button>
+            <button onclick="filterAccounts('100to300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500">100 - 300</button>
+            <button onclick="filterAccounts('over300', this)" class="filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500">+300 درهم</button>
         </div>
+    </div>
 
-    </main>
+    <div id="loadingState" class="flex flex-col items-center justify-center py-10">
+        <i class="fa-solid fa-circle-notch fa-spin text-4xl text-blue-500 mb-3"></i>
+        <p class="text-sm font-bold text-gray-500">جاري جلب الحسابات المتاحة...</p>
+    </div>
 
-    <script>
-        const FIREBASE_URL = 'https://hamza-f798c-default-rtdb.firebaseio.com/acc.json';
-        let allAccountsData = {}; 
-        let isDataLoaded = false; 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden" id="accountsGrid"></div>
 
-        function parseDateString(dateStr) {
-            if (!dateStr) return 0;
-            const parts = dateStr.split('-');
-            if (parts.length === 3) {
-                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
-            }
-            return 0;
+    <div id="emptyState" class="hidden flex-col items-center justify-center py-10">
+        <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-3"></i>
+        <p class="text-sm font-bold text-gray-500">لا توجد حسابات متاحة في هذا النطاق السعري حالياً.</p>
+    </div>
+
+</main>
+
+<script>
+const FIREBASE_URL = 'https://serverfirebase.fly.dev/api/public/accounts';
+
+let allAccountsData = [];
+let isDataLoaded = false;
+
+function parseDateString(dateStr) {
+    if (!dateStr) return 0;
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+        return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+    }
+    return 0;
+}
+
+async function fetchAccounts() {
+    try {
+        const response = await fetch(FIREBASE_URL, { method: 'GET' });
+        const data = await response.json();
+
+        console.log("API DATA:", data);
+
+        // 🔥 دعم كل أشكال الـ API
+        if (Array.isArray(data)) {
+            allAccountsData = data;
+        } else if (Array.isArray(data?.accounts)) {
+            allAccountsData = data.accounts;
+        } else if (Array.isArray(data?.data)) {
+            allAccountsData = data.data;
+        } else {
+            allAccountsData = Object.values(data || {});
         }
 
-        async function fetchAccounts() {
-            try {
-                const response = await fetch(FIREBASE_URL);
-                const data = await response.json();
-                
-                if (data) {
-                    allAccountsData = data;
-                    isDataLoaded = true;
-                    
-                    let activeAccountsCount = 0;
-                    for (const [id, acc] of Object.entries(data)) {
-                        // 🔥 التعديل: نتأكد من حالة الحساب وأن مفتاح push لا يساوي false لاحتسابه
-                        if (acc && acc.status === 'available' && acc.title) {
-                            if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
-                            activeAccountsCount++;
-                        }
-                    }
-                    document.getElementById('activeCount').innerText = activeAccountsCount;
+        isDataLoaded = true;
 
-                    document.getElementById('loadingState').classList.add('hidden');
-                    document.getElementById('accountsGrid').classList.remove('hidden');
-                    renderAccounts('all'); 
-                }
-            } catch (error) {
-                console.error("خطأ: ", error);
-                const loadingElement = document.getElementById('loadingState');
-                loadingElement.classList.remove('hidden');
-                loadingElement.innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم.</p>`;
-            }
-        }
-
-        function registerViewAndRedirect(event, sellerName, accountId, url) {
-            event.preventDefault(); 
-            fetch('https://serverfirebase.fly.dev/api/increment-view', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ seller: sellerName, id: accountId })
-            }).catch(e => console.error("View increment failed", e));
-            window.location.href = url;
-        }
-
-        function renderAccounts(filterType) {
-            const grid = document.getElementById('accountsGrid');
-            const emptyState = document.getElementById('emptyState');
-            grid.innerHTML = ''; 
-            let hasItems = false;
-
-            let accountsArray = [];
-            for (const [id, acc] of Object.entries(allAccountsData)) {
-                if (!acc || acc.status !== 'available' || !acc.title) continue; 
-                // 🔥 التعديل الجذري: إذا كان مفتاح push هو false (أو "false") لا تضف الحساب للواجهة
+        let count = 0;
+        for (const acc of allAccountsData) {
+            if (acc?.status === 'available' && acc.title) {
                 if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
-
-                accountsArray.push({ id, ...acc });
-            }
-
-            accountsArray.sort((a, b) => parseDateString(b.timestamp) - parseDateString(a.timestamp));
-            const now = new Date();
-
-            for (const acc of accountsArray) {
-                let originalWebPrice = parseFloat(acc.price_web) || 0;
-                
-                let priceWeb = Math.round(originalWebPrice * 1.05);
-                let bankPrice = parseFloat(acc.bank_price) || priceWeb;
-                
-                if (filterType === 'under100' && priceWeb >= 100) continue;
-                if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
-                if (filterType === 'over300' && priceWeb <= 300) continue;
-
-                hasItems = true;
-
-                let rawInwi = priceWeb * 1.25;
-                let inwiPrice = Math.round(rawInwi / 5) * 5; 
-
-                let isNew = false;
-                if (acc.timestamp) {
-                    const accDate = parseDateString(acc.timestamp);
-                    const diffInDays = (now.getTime() - accDate) / (1000 * 60 * 60 * 24);
-                    if (diffInDays <= 3) {
-                        isNew = true;
-                    }
-                }
-
-                const accKey = acc.key || acc.id;
-
-                const checkoutUrl = `checkout.html?id=${acc.id}&key=${accKey}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}&img2=${encodeURIComponent(acc.img2 || '')}&img3=${encodeURIComponent(acc.img3 || '')}&bank=${bankPrice}&web=${priceWeb}&bot=${acc.price_bot || ''}&gg=${acc.gg}&ios=${acc.ios}&date=${acc.timestamp || ''}&seller=${encodeURIComponent(acc.seller || '')}&desc=${encodeURIComponent(acc.desc || '')}&limit=${encodeURIComponent(acc.limit || '')}`;
-                
-                let newBadgeRibbon = isNew ? `
-                <div class="absolute z-10 w-24 p-0.5 text-center -rotate-45 -left-7 top-3 bg-red-600 text-white text-[9px] font-black shadow-lg uppercase tracking-widest">
-                    جديد
-                </div>
-                ` : '';
-                
-                let priceBotValue = acc.price_bot ? parseFloat(acc.price_bot) : null;
-                let oldPriceHtml = (priceBotValue && priceBotValue > priceWeb) ? `<del class="text-[10px] text-gray-400 block -mb-1">${priceBotValue} MAD</del>` : '';
-
-                grid.innerHTML += `
-                <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col shadow-sm relative group">
-                    <div class="relative w-full bg-[#0a0a20] flex items-center justify-center overflow-hidden">
-                        ${newBadgeRibbon}
-                        <div class="absolute inset-0 skeleton" id="skel_${acc.id.replace(/[^a-zA-Z0-9]/g, '')}"></div>
-                        <img src="${acc.img}" 
-                             loading="lazy" decoding="async"
-                             onload="document.getElementById('skel_${acc.id.replace(/[^a-zA-Z0-9]/g, '')}').style.display='none'" 
-                             class="w-full h-auto block" 
-                             alt="${acc.title}">
-                    </div>
-                    <div class="p-4 flex-grow flex flex-col justify-between">
-                        <h3 class="font-bold text-sm mb-4 text-gray-900 line-clamp-2 leading-relaxed">${acc.title}</h3>
-                        <div>
-                            <div class="flex justify-between items-center bg-blue-50 p-2.5 rounded-lg mb-2 border border-blue-100">
-                                <span class="text-blue-700 text-xs font-bold">السعر:</span>
-                                <div class="text-left">
-                                    ${oldPriceHtml}
-                                    <span class="font-black text-blue-700 text-sm">${priceWeb} MAD</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center bg-purple-50 p-2.5 rounded-lg mb-4 border border-purple-100">
-                                <span class="text-purple-700 text-xs font-bold">تعبئة إنوي:</span>
-                                <span class="font-black text-purple-700 text-sm">${inwiPrice} MAD</span>
-                            </div>
-                            <a href="${checkoutUrl}" onclick="registerViewAndRedirect(event, '${acc.seller}', '${accKey}', '${checkoutUrl}')" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl transition text-sm shadow-md shadow-blue-500/20">
-                                شراء الحساب
-                            </a>
-                        </div>
-                    </div>
-                </div>`;
-            }
-
-            if (!hasItems) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-            } else {
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
+                count++;
             }
         }
 
-        function filterAccounts(filterType, btnElement) {
-            if(!isDataLoaded) return; 
-            
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                btn.className = "filter-btn flex-1 py-2.5 text-sm font-bold text-gray-500 hover:bg-gray-50 border-l border-gray-200 transition-colors flex justify-center items-center";
-            });
-            btnElement.className = "filter-btn flex-1 py-2.5 text-sm font-bold bg-blue-600 text-white border-l border-blue-600 transition-colors flex justify-center items-center";
-            renderAccounts(filterType);
+        document.getElementById('activeCount').innerText = count;
+
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('accountsGrid').classList.remove('hidden');
+
+        renderAccounts('all');
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById('loadingState').innerHTML =
+            `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم</p>`;
+    }
+}
+
+function renderAccounts(filterType) {
+    const grid = document.getElementById('accountsGrid');
+    const emptyState = document.getElementById('emptyState');
+
+    grid.innerHTML = '';
+    let hasItems = false;
+
+    let accounts = allAccountsData.filter(acc =>
+        acc?.status === 'available' &&
+        acc?.title &&
+        !(acc.push === false || String(acc.push).toLowerCase() === "false")
+    );
+
+    accounts.sort((a, b) =>
+        parseDateString(b.timestamp) - parseDateString(a.timestamp)
+    );
+
+    const now = new Date();
+
+    for (const acc of accounts) {
+
+        let priceWeb = Math.round((parseFloat(acc.price_web) || 0) * 1.05);
+
+        if (filterType === 'under100' && priceWeb >= 100) continue;
+        if (filterType === '100to300' && (priceWeb < 100 || priceWeb > 300)) continue;
+        if (filterType === 'over300' && priceWeb <= 300) continue;
+
+        hasItems = true;
+
+        let inwiPrice = Math.round((priceWeb * 1.25) / 5) * 5;
+
+        let isNew = false;
+        if (acc.timestamp) {
+            const diff = (now - parseDateString(acc.timestamp)) / (1000 * 60 * 60 * 24);
+            if (diff <= 3) isNew = true;
         }
 
-        window.onload = fetchAccounts;
+        const key = acc.key || acc.id;
 
-    </script>
+        const checkoutUrl =
+            `checkout.html?id=${acc.id}&key=${key}&title=${encodeURIComponent(acc.title)}&img=${encodeURIComponent(acc.img)}`;
+
+        grid.innerHTML += `
+        <div class="bg-white rounded-2xl border shadow-sm flex flex-col overflow-hidden">
+
+            <div class="relative">
+                <img src="${acc.img}" class="w-full">
+                ${isNew ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1">جديد</div>` : ''}
+            </div>
+
+            <div class="p-4 flex flex-col gap-2">
+                <div class="font-bold text-sm">${acc.title}</div>
+
+                <div class="text-blue-600 font-black">${priceWeb} MAD</div>
+
+                <div class="text-purple-600 text-sm">${inwiPrice} MAD إنوي</div>
+
+                <a href="${checkoutUrl}"
+                   class="bg-blue-600 text-white text-center py-2 rounded-lg text-sm font-bold">
+                   شراء
+                </a>
+            </div>
+
+        </div>`;
+    }
+
+    if (!hasItems) {
+        emptyState.classList.remove('hidden');
+    } else {
+        emptyState.classList.add('hidden');
+    }
+}
+
+function filterAccounts(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('bg-blue-600', 'text-white');
+        b.classList.add('text-gray-500');
+    });
+
+    btn.classList.add('bg-blue-600', 'text-white');
+    renderAccounts(type);
+}
+
+window.onload = fetchAccounts;
+</script>
+
 </body>
 </html>
