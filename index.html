@@ -85,7 +85,10 @@
 
         async function fetchAccounts() {
             try {
-                const response = await fetch(FIREBASE_URL);
+                const response = await fetch(FIREBASE_URL, {
+                    method: 'GET'
+                });
+
                 const data = await response.json();
                 
                 if (data) {
