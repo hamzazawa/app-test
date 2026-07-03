@@ -85,16 +85,48 @@
 
         async function fetchAccounts() {
             try {
-                const response = await fetch(FIREBASE_URL);
-                const data = await response.json();
+                // طلب GET صريح مع ترويسات جيسون
+                const response = await fetch(FIREBASE_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
                 
-                if (data) {
-                    allAccountsData = data;
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`[HTTP ${response.status}] ${response.statusText}\n${errorText}`);
+                }
+
+                const rawData = await response.json();
+                
+                // معالجة ذكية لهيكل البيانات: إذا كانت مصفوفة أو مغلفة داخل كائن مثل data
+                let parsedData = rawData;
+                if (parsedData && !Array.isArray(parsedData) && typeof parsedData === 'object') {
+                    if (parsedData.data) parsedData = parsedData.data;
+                    else if (parsedData.accounts) parsedData = parsedData.accounts;
+                    else if (parsedData.result) parsedData = parsedData.result;
+                }
+
+                // تحويل البيانات لتتوافق مع هيكل Object المستخدم في الكود الخاص بك
+                allAccountsData = {};
+                if (Array.isArray(parsedData)) {
+                    parsedData.forEach((acc, index) => {
+                        const accId = acc.id || acc.key || index.toString();
+                        allAccountsData[accId] = acc;
+                    });
+                } else if (typeof parsedData === 'object' && parsedData !== null) {
+                    allAccountsData = parsedData;
+                } else {
+                     throw new Error(`هيكل JSON غير مدعوم أو فارغ: \n${JSON.stringify(rawData, null, 2)}`);
+                }
+
+                if (Object.keys(allAccountsData).length >= 0) {
                     isDataLoaded = true;
                     
                     let activeAccountsCount = 0;
-                    for (const [id, acc] of Object.entries(data)) {
-                        // 🔥 التعديل: نتأكد من حالة الحساب وأن مفتاح push لا يساوي false لاحتسابه
+                    for (const [id, acc] of Object.entries(allAccountsData)) {
                         if (acc && acc.status === 'available' && acc.title) {
                             if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
                             activeAccountsCount++;
@@ -107,10 +139,18 @@
                     renderAccounts('all'); 
                 }
             } catch (error) {
-                console.error("خطأ: ", error);
+                console.error("Fetch Error: ", error);
                 const loadingElement = document.getElementById('loadingState');
                 loadingElement.classList.remove('hidden');
-                loadingElement.innerHTML = `<p class="text-red-500 font-bold">حدث خطأ في الاتصال بالخادم.</p>`;
+                
+                // طباعة الخطأ الحقيقي بشكل احترافي كما طلبت
+                loadingElement.innerHTML = `
+                    <div class="bg-red-50 border-l-4 border-red-600 p-4 w-full max-w-3xl mx-auto rounded shadow-sm my-4 text-left" dir="ltr">
+                        <div class="flex items-center mb-2 text-red-800 font-bold">
+                            <i class="fa-solid fa-bug mr-2"></i> <span>System Error Details</span>
+                        </div>
+                        <pre class="bg-red-100 p-3 rounded text-sm text-red-900 whitespace-pre-wrap overflow-x-auto font-mono">${error.stack || error.message || error}</pre>
+                    </div>`;
             }
         }
 
@@ -133,7 +173,6 @@
             let accountsArray = [];
             for (const [id, acc] of Object.entries(allAccountsData)) {
                 if (!acc || acc.status !== 'available' || !acc.title) continue; 
-                // 🔥 التعديل الجذري: إذا كان مفتاح push هو false (أو "false") لا تضف الحساب للواجهة
                 if (acc.push === false || String(acc.push).toLowerCase() === "false") continue;
 
                 accountsArray.push({ id, ...acc });
